@@ -99,3 +99,9 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# macOS system file
+.DS_Store
+
+# IDEA files
+.idea/

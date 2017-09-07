@@ -99,6 +99,6 @@ def use_BRIFL_SVG():
     global render_state
     #from    Missionaries_SVG_VIS_FOR_BRIFL import render_state as rs
     #render_state = rs
-    from    Missionaries_SVG_VIS_FOR_BRIFL import render_state
+    from Missionaries_SVG_VIS_FOR_BRIFL import render_state
 #</STATE_VIS>
 

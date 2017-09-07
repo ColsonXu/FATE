@@ -22,16 +22,21 @@ def render_state(s):
     # and we do it (the first time this method is called).
     global myFont
     if not myFont:
-        myFont = font.Font(family="Helvetica", size=18, weight="bold")
+        myFont = font.Font(family="Helvetica", size=20, weight="bold")
     print("In render_state, state is "+str(s))
     # Create the default array of colors
-    green = (67,160,71)
-    white = (245,245,245)
-    burgendy = (194,24,91)
-    blue = (2,136,209)
+    plants = (67,160,71)
+    ice = (245,245,245)
+    beef = (194,24,91)
+    ocean = (2,136,209)
+    empty = (161,136,127)
+    house = (253,216,53)
+    power = (96,125,139)
+    mine = (0,0,0)
 
-    row = [green] * 10
-    the_color_array = [row, row[:], row[:], row[:], row[:], row[:], row[:], row[:], row[:], [blue] * 9 + [white]]
+
+    row = [plants] * 10
+    the_color_array = [row, row[:], row[:], row[:], row[:], row[:], row[:], row[:], row[:], [ocean] * 9 + [ice]]
     the_string_array = []
     
     caption="Current state of the puzzle. Textual version: "+str(s)        

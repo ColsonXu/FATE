@@ -5,7 +5,7 @@ Missionaries.py
 ("Missionaries and Cannibals" problem)
 A SOLUZION problem formulation.
 The XML-like tags used here may not be necessary, in the end.
-But for now, they serve to identify key sections of this 
+But for now, they serve to identify key sections of this
 problem formulation. It is important that COMMON_CODE come
 before all the other sections (except METADATA), including COMMON_DATA.
 
@@ -38,13 +38,15 @@ def copy_state(s):
     return copy.deepcopy(s)
 
 
-def can_move(s,m,c):
-    pass
+def isActionAvailable(state, action, loc):
+    # WIP, temporarily returns True
+    return True
 
-
-def move(olds,m,c):
-    pass
-
+def takeAction(state, action, loc):
+    newState = copy_state(state)
+    if action == 'Grow beef':
+        newState['Board'][loc[0]][loc[1]] = 2
+    return newState
 
 def describe_state(s):
     caption = "Polulation:", s['p'], "Gold:", s['gold'], "Wood:", s['wood'], "Food:", s['food'], "Living Quality:", s['lq'], "Temp.:", s['temp']
@@ -90,6 +92,11 @@ class Operator:
     7: Ocean
     '''
 
+row = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+board = [row]
+for i in range(8):
+    board.append(row[:])
+board.append([7, 7, 7, 7, 7, 7, 7, 7, 7, 6])
 INITIAL_STATE = {
                 'p': 100,
                 'gg_level': 0,
@@ -98,18 +105,18 @@ INITIAL_STATE = {
                 'food': 0,
                 'lq': 100,
                 'temp': 0,
-                'board': [ [0]*10 ]*9 + [[7,7,7,7,7,7,7,7,7,6]]
+                'board': board
                 }
 #</INITIAL_STATE>
 
 #<OPERATORS>
-MC_combinations = [(1,0),(2,0),(3,0),(1,1),(2,1)]
+actions = [('Grow beef', (0, 0))]
 
 OPERATORS = [Operator(
-    "Cross the river with "+str(m)+" missionaries and "+str(c)+" cannibals",
-    lambda s, m1=m, c1=c: can_move(s,m1,c1),
-    lambda s, m1=m, c1=c: move(s,m1,c1) ) 
-    for (m,c) in MC_combinations]
+    action + " on row " + str(loc[0]) + ", column " + str(loc[1]),
+    lambda state, action1 = action, loc1 = loc: isActionAvailable(state, action1, loc1),
+    lambda state, action1 = action, loc1 = loc: takeAction(state, action1, loc1))
+    for (action, loc) in actions]
 #</OPERATORS>
 
 #<GOAL_TEST> (optional)
@@ -122,11 +129,10 @@ GOAL_MESSAGE_FUNCTION = lambda s: goal_message(s)
 
 #<STATE_VIS>
 render_state = None
-    
+
 def use_BRIFL_SVG():
     global render_state
     #from    Missionaries_SVG_VIS_FOR_BRIFL import render_state as rs
     #render_state = rs
     from Missionaries_SVG_VIS_FOR_BRIFL import render_state
 #</STATE_VIS>
-

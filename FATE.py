@@ -63,59 +63,61 @@ def takeAction(state, action, loc):
 
         if left_edge:
             op_blocks = [
-            newState['board'][loc[0] + 1][loc[1]],
-            newState['board'][loc[0]][loc[1] - 1],
-            newState['board'][loc[0]][loc[1] + 1]
+            [loc[0] + 1, loc[1]],
+            [loc[0], loc[1] - 1],
+            [loc[0], loc[1] + 1]
             ]
         elif right_edge:
             op_blocks = [
-            newState['board'][loc[0] - 1][loc[1]],
-            newState['board'][loc[0]][loc[1] - 1],
-            newState['board'][loc[0]][loc[1] + 1]
+            [loc[0] - 1, loc[1]],
+            [loc[0], loc[1] - 1],
+            [loc[0], loc[1] + 1]
             ]
         elif up_edge:
             op_blocks = [
-            newState['board'][loc[0] - 1][loc[1]],
-            newState['board'][loc[0] + 1][loc[1]],
-            newState['board'][loc[0]][loc[1] + 1]
+            [loc[0] - 1, loc[1]],
+            [loc[0] + 1, loc[1]],
+            [loc[0], loc[1] + 1]
             ]
         elif low_edge:
             op_blocks = [
-            newState['board'][loc[0] - 1][loc[1]],
-            newState['board'][loc[0] + 1][loc[1]],
-            newState['board'][loc[0]][loc[1] - 1]
+            [loc[0] - 1, loc[1]],
+            [loc[0] + 1, loc[1]],
+            [loc[0], loc[1] - 1]
             ]
         elif ul_corner:
             op_blocks = [
-            newState['board'][loc[0] + 1][loc[1]],
-            newState['board'][loc[0]][loc[1] + 1]
+            [loc[0] + 1, loc[1]],
+            [loc[0], loc[1] + 1]
             ]
         elif ur_corner:
             op_blocks = [
-            newState['board'][loc[0] - 1][loc[1]],
-            newState['board'][loc[0]][loc[1] + 1]
+            [loc[0] - 1][loc[1]],
+            [loc[0]][loc[1] + 1]
             ]
         elif dl_corner:
             op_blocks = [
-            newState['board'][loc[0] + 1][loc[1]],
-            newState['board'][loc[0]][loc[1] - 1]
+            [loc[0] + 1, loc[1]],
+            [loc[0], loc[1] - 1]
             ]
         elif dr_corner:
             op_blocks = [
-            newState['board'][loc[0] - 1][loc[1]],
-            newState['board'][loc[0]][loc[1] - 1]
+            [loc[0] - 1, loc[1]],
+            [loc[0], loc[1] - 1]
             ]
         elif not (left_edge or right_edge or up_edge or low_edge):
             op_blocks = [
-            newState['board'][loc[0] - 1][loc[1]],
-            newState['board'][loc[0] + 1][loc[1]],
-            newState['board'][loc[0]][loc[1] - 1],
-            newState['board'][loc[0]][loc[1] + 1]
+            [loc[0] - 1, loc[1]],
+            [loc[0] + 1, loc[1]],
+            [loc[0], loc[1] - 1],
+            [loc[0], loc[1] + 1]
             ]
         
         for block in op_blocks:
-            if not (block == 6 or block == 7):
-                block = 1
+            if not (state['board'][block[0]][block[1]] == 6 or state['board'][block[0]][block[1]] == 7):
+                newState['board'][block[0]][block[1]] = 1
+
+        print(newState['board'])
 
     elif action == 'Build house':
         newState['board'][loc[0]][loc[1]] = 5
@@ -198,7 +200,7 @@ INITIAL_STATE = {
 
 #<OPERATORS>
 actions = [
-            ('Burn down forest', (9,0)), 
+            ('Burn down forest', (9,8)), 
             ('Build cattle farm', (0,1)), 
             ('Build house', (0,2)), 
             ('Cut down forest', (0,3)), 

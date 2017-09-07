@@ -57,9 +57,14 @@ def render_state(s):
                 }
 
 
-    row = [plants] * 10
-    the_color_array = [ row, row[:], row[:], row[:], row[:], row[:], row[:], row[:], row[:], [ocean] * 9 + [ice] ]
-    the_string_array = [ [''] * 10 ] * 10
+    color_row = [plants] * 10
+    the_color_array = [ color_row, color_row[:], color_row[:], color_row[:], \
+                        color_row[:], color_row[:], color_row[:], color_row[:], \
+                        color_row[:], [ocean] * 9 + [ice] ]
+    string_row = [''] * 10
+    the_string_array = [string_row, string_row[:], string_row[:], \
+                        string_row[:], string_row[:], string_row[:], string_row[:], \
+                        string_row[:], string_row[:], string_row[:]]
 
     for i in range(10):
       for j in range(10):

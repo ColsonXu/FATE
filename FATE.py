@@ -35,38 +35,102 @@ PROBLEM_DESC=\
 
 
 def copy_state(s):
-    copied_state = {
-                   'p': None,
-                   'gg': None,
-                   'gold': None,
-                   'wood': None,
-                   'food': None,
-                   'lq': None,
-                   'temp': None,
-                   'board': None
-                   }
-
-    copied_state['p'] = s['p']
-    copied_state['gg'] = s['gg']
-    copied_state['gold'] = s['gold']
-    copied_state['wood'] = s['wood']
-    copied_state['food'] = s['food']
-    copied_state['lq'] = s['lq']
-    copied_state['temp'] = s['temp']
-    copied_state['board'] = s['board']
-
-    return copied_state
+    return copy.deepcopy(s)
 
 
 def isActionAvailable(state, action, loc):
     # WIP, temporarily returns True
     return True
 
+
 def takeAction(state, action, loc):
     newState = copy_state(state)
-    if action == 'Build Cattle Farm':
+
+    if action == 'Build cattle farm':
         newState['board'][loc[0]][loc[1]] = 2
+
+    elif action == 'Burn down forest':
+        newState['board'][loc[0]][loc[1]] = 1
+
+        left_edge = loc[0] == 0 and (not loc[1] == 0) and (not loc[1] == 9)
+        right_edge = loc[0] == 9 and (not loc[1] == 0) and (not loc[1] == 9)
+        up_edge = loc[1] == 0 and (not loc[0] == 0) and (not loc[0] == 9)
+        low_edge = loc[1] == 9 and (not loc[0] == 0) and (not loc[0] == 9)
+        ul_corner = loc[0] == 0 and loc[1] == 0
+        ur_corner = loc[0] == 9 and loc[1] == 0
+        dl_corner = loc[0] == 0 and loc[1] == 9
+        dr_corner = loc[0] == 9 and loc[1] == 9
+
+        if left_edge:
+            op_blocks = [
+            newState['board'][loc[0] + 1][loc[1]],
+            newState['board'][loc[0]][loc[1] - 1],
+            newState['board'][loc[0]][loc[1] + 1]
+            ]
+        elif right_edge:
+            op_blocks = [
+            newState['board'][loc[0] - 1][loc[1]],
+            newState['board'][loc[0]][loc[1] - 1],
+            newState['board'][loc[0]][loc[1] + 1]
+            ]
+        elif up_edge:
+            op_blocks = [
+            newState['board'][loc[0] - 1][loc[1]],
+            newState['board'][loc[0] + 1][loc[1]],
+            newState['board'][loc[0]][loc[1] + 1]
+            ]
+        elif low_edge:
+            op_blocks = [
+            newState['board'][loc[0] - 1][loc[1]],
+            newState['board'][loc[0] + 1][loc[1]],
+            newState['board'][loc[0]][loc[1] - 1]
+            ]
+        elif ul_corner:
+            op_blocks = [
+            newState['board'][loc[0] + 1][loc[1]],
+            newState['board'][loc[0]][loc[1] + 1]
+            ]
+        elif ur_corner:
+            op_blocks = [
+            newState['board'][loc[0] - 1][loc[1]],
+            newState['board'][loc[0]][loc[1] + 1]
+            ]
+        elif dl_corner:
+            op_blocks = [
+            newState['board'][loc[0] + 1][loc[1]],
+            newState['board'][loc[0]][loc[1] - 1]
+            ]
+        elif dr_corner:
+            op_blocks = [
+            newState['board'][loc[0] - 1][loc[1]],
+            newState['board'][loc[0]][loc[1] - 1]
+            ]
+        elif not (left_edge or right_edge or up_edge or low_edge):
+            op_blocks = [
+            newState['board'][loc[0] - 1][loc[1]],
+            newState['board'][loc[0] + 1][loc[1]],
+            newState['board'][loc[0]][loc[1] - 1],
+            newState['board'][loc[0]][loc[1] + 1]
+            ]
+        
+        for block in op_blocks:
+            if not (block == 6 or block == 7):
+                block = 1
+
+    elif action == 'Build house':
+        newState['board'][loc[0]][loc[1]] = 5
+
+    elif action == 'Cut down forest':
+        newState['board'][loc[0]][loc[1]] = 1
+
+    elif action == 'Mine coal':
+        newState['board'][loc[0]][loc[1]] = 3
+
+    elif action == 'Build power plant':
+        newState['board'][loc[0]][loc[1]] = 4
+
     return newState
+
 
 def describe_state(s):
     caption = "Polulation:", s['p'], "Gold:", s['gold'], "Wood:", s['wood'], "Food:", s['food'], "Living Quality:", s['lq'], "Temp.:", s['temp']
@@ -89,11 +153,14 @@ class Operator:
         self.precond = precond
         self.state_transf = state_transf
 
+
     def is_applicable(self, s):
         return self.precond(s)
 
+
     def apply(self, s):
         return self.state_transf(s)
+
 
 #</COMMON_CODE>
 
@@ -130,7 +197,14 @@ INITIAL_STATE = {
 #</INITIAL_STATE>
 
 #<OPERATORS>
-actions = [('Build Cattle Farm', (0, 0))]
+actions = [
+            ('Burn down forest', (9,0)), 
+            ('Build cattle farm', (0,1)), 
+            ('Build house', (0,2)), 
+            ('Cut down forest', (0,3)), 
+            ('Mine coal', (0,4)), 
+            ('Build power plant', (0,5))
+          ]
 
 OPERATORS = [Operator(
     action + " on row " + str(loc[0]) + ", column " + str(loc[1]),

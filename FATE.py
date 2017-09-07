@@ -113,7 +113,7 @@ INITIAL_STATE = {
 actions = [('Grow beef', (0, 0))]
 
 OPERATORS = [Operator(
-    action + " on row " + str(loc[0]) + ", column " + str(loc[1]),
+    action + " on row " + str(loc[0] + 1) + ", column " + str(loc[1] + 1),
     lambda state, action1 = action, loc1 = loc: isActionAvailable(state, action1, loc1),
     lambda state, action1 = action, loc1 = loc: takeAction(state, action1, loc1))
     for (action, loc) in actions]

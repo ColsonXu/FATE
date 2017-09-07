@@ -1,10 +1,10 @@
-'''Missionaries_Array_VIS_FOR_TK.py
+'''FATE_Array_VIS_FOR_TK.py
 Version of Aug. 5, 2017.
 
 '''
 
 from show_state_array import initialize_tk, state_array, state_display, STATE_WINDOW, test
-import time
+
 from tkinter import font
 
 myFont=None
@@ -28,12 +28,11 @@ def render_state(s):
     green = (67,160,71)
     white = (245,245,245)
     burgendy = (194,24,91)
-    
+    blue = (2,136,209)
+
     row = [green] * 10
-    the_color_array = [row, row[:], row[:], row[:], row[:], row[:], row[:], row[:], row[:], row[:9] + [white]]
+    the_color_array = [row, row[:], row[:], row[:], row[:], row[:], row[:], row[:], row[:], [blue] * 9 + [white]]
     the_string_array = []
-    
-    
     
     caption="Current state of the puzzle. Textual version: "+str(s)        
     the_state_array = state_array(color_array=the_color_array,
@@ -42,7 +41,3 @@ def render_state(s):
                                   caption=caption)
     print("the_state_array is: "+str(the_state_array))
     the_state_array.show()
-
-    time.sleep(4)
-
-    the_color_array[3][3] = burgendy

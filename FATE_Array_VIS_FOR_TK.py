@@ -41,7 +41,7 @@ def render_state(s):
                 ocean: 'Ocean', 
                 empty: 'Empty', 
                 house: 'House', 
-                power: 'Power Plant', 
+                power: 'Power\n Plant', 
                 mine: 'Mine'
                 }
 

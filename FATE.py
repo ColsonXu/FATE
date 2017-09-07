@@ -45,7 +45,7 @@ def isActionAvailable(state, action, loc):
 def takeAction(state, action, loc):
     newState = copy_state(state)
     if action == 'Grow beef':
-        newState['Board'][loc[0]][loc[1]] = 2
+        newState['board'][loc[0]][loc[1]] = 2
     return newState
 
 def describe_state(s):

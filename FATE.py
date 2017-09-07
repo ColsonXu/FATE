@@ -112,7 +112,9 @@ class Operator:
     7: Ocean
     '''
 
-board = [[0] * 10] * 9 + [[7] * 9 + [6]]
+row = [0] * 10
+board = [row[:] for i in range(9)]
+board.append([7, 7, 7, 7, 7, 7, 7, 7, 7, 6])
 
 INITIAL_STATE = {
                 'p': 100,               # Population

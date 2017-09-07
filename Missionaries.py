@@ -68,6 +68,19 @@ class Operator:
 #</COMMON_CODE>
 
 #<INITIAL_STATE>
+'''
+Block Code Index:
+
+0: Plants
+1: Empty Space
+2: Cattle Farm
+3: Coal Mine
+4: Power Plant
+5: House
+6: Ice
+7: Ocean
+'''
+
 INITIAL_STATE = {
                 'Population': 100,
                 'Greenhouse Gas Level': 0,
@@ -76,7 +89,7 @@ INITIAL_STATE = {
                 'Food': 0,
                 'Living Quality': 100,
                 'Temp.': 0,
-                'Board': [ [0]*10 ]*10
+                'Board': [ [0]*10 ]*9 + [[7,7,7,7,7,7,7,7,7,6]]
                 }
 #</INITIAL_STATE>
 

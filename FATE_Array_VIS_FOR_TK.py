@@ -34,15 +34,21 @@ def render_state(s):
     power = (96,125,139)    # 4
     mine = (0,0,0)          # 3
 
+
+
     translate = {plants: 'Tree', ice: 'Ice', beef: 'Cattles', ocean: 'Ocean',\
                  empty: 'Empty', house: 'House', power: 'Industry', mine: 'Mining'}
-
     color_dic = {0: plants, 1: empty, 2: beef, 3: mine, 4: power, 5: house, 6: ice, 7: ocean}
+
     row = [plants] * 10
-    the_color_array = [row, row[:], row[:], row[:], row[:], row[:], row[:], row[:], row[:], [ocean] * 9 + [ice]]
+    the_color_array = [row, row[:], row[:], row[:], row[:], row[:], row[:], row[:], row[:], [ocean] * 7 + [ice]]
     the_string_array = [['']*10]*10
       
-    
+    # for row in the_color_array:
+    #     for block in row:
+    #         block = color_dic[s['board'][the_color_array.index(row)][row.index(block)]]
+    #         the_string_array = translate[block]
+
     for i in range(10):
       for j in range(10):
         the_color_array[i][j] = color_dic[s['board'][i][j]]

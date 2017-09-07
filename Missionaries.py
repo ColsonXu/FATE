@@ -4,7 +4,7 @@ import copy
 ("Missionaries and Cannibals" problem)
 A SOLUZION problem formulation.
 The XML-like tags used here may not be necessary, in the end.
-But for now, they serve to identify key sections of this 
+But for now, they serve to identify key sections of this
 problem formulation.    It is important that COMMON_CODE come
 before all the other sections (except METADATA), including COMMON_DATA.
 
@@ -72,6 +72,20 @@ class Operator:
 #</COMMON_CODE>
 
 #<INITIAL_STATE>
+
+'''
+Block Code Index:
+
+0: Plants
+1: Empty Space
+2: Cattle Farm
+3: Coal Mine
+4: Power Plant
+5: House
+6: Ice
+7: Ocean
+'''
+
 row = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 board = [row]
 for i in range(8):
@@ -109,11 +123,10 @@ GOAL_MESSAGE_FUNCTION = lambda s: goal_message(s)
 
 #<STATE_VIS>
 render_state = None
-    
+
 def use_BRIFL_SVG():
     global render_state
     #from    Missionaries_SVG_VIS_FOR_BRIFL import render_state as rs
     #render_state = rs
     from Missionaries_SVG_VIS_FOR_BRIFL import render_state
 #</STATE_VIS>
-

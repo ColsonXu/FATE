@@ -25,19 +25,31 @@ def render_state(s):
         myFont = font.Font(family="Helvetica", size=20, weight="bold")
     print("In render_state, state is "+str(s))
     # Create the default array of colors
-    plants = (67,160,71)
-    ice = (245,245,245)
-    beef = (194,24,91)
-    ocean = (2,136,209)
-    empty = (161,136,127)
-    house = (253,216,53)
-    power = (96,125,139)
-    mine = (0,0,0)
+    plants = (67,160,71)# 0
+    ice = (245,245,245)#6
+    beef = (194,24,91)# 2
+    ocean = (2,136,209)# 7
+    empty = (161,136,127)# 1
+    house = (253,216,53)# 5
+    power = (96,125,139)# 4
+    mine = (0,0,0)# 3
+
+    color_dic = {plants: 'Tree', ice: 'Ice', beef: 'Cattles', ocean: 'Ocean',\
+                 empty: 'Empty', house: 'House', power: 'Industry', mine: 'Mining'}
 
 
     row = [plants] * 10
     the_color_array = [row, row[:], row[:], row[:], row[:], row[:], row[:], row[:], row[:], [ocean] * 9 + [ice]]
-    the_string_array = []
+    the_string_array = [['']*10]*10
+
+    
+    
+    for i in range(10):
+      for j in range(10):
+        the_string_array[i][j] = color_dic[the_color_array[i][j]]
+
+    
+    
     
     caption="Current state of the puzzle. Textual version: "+str(s)        
     the_state_array = state_array(color_array=the_color_array,

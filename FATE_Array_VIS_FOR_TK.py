@@ -4,7 +4,7 @@ Version of Aug. 5, 2017.
 '''
 
 from show_state_array import initialize_tk, state_array, state_display, STATE_WINDOW, test
-
+import Missionaries
 from tkinter import font
 
 myFont=None
@@ -22,7 +22,7 @@ def render_state(s):
     # and we do it (the first time this method is called).
     global myFont
     if not myFont:
-        myFont = font.Font(family="Helvetica", size=20, weight="bold")
+        myFont = font.Font(family="Helvetica", size=18, weight="bold")
     print("In render_state, state is "+str(s))
     # Create the default array of colors
     plants = (67,160,71)# 0
@@ -34,24 +34,24 @@ def render_state(s):
     power = (96,125,139)# 4
     mine = (0,0,0)# 3
 
-    color_dic = {plants: 'Tree', ice: 'Ice', beef: 'Cattles', ocean: 'Ocean',\
+    translate = {plants: 'Tree', ice: 'Ice', beef: 'Cattles', ocean: 'Ocean',\
                  empty: 'Empty', house: 'House', power: 'Industry', mine: 'Mining'}
 
-
+    color_dic = {0: plants, 1: empty, 2: beef, 3: mine, 4: power, 5: house, 6: ice, 7: ocean}
     row = [plants] * 10
     the_color_array = [row, row[:], row[:], row[:], row[:], row[:], row[:], row[:], row[:], [ocean] * 9 + [ice]]
     the_string_array = [['']*10]*10
-
-    
+      
     
     for i in range(10):
       for j in range(10):
-        the_string_array[i][j] = color_dic[the_color_array[i][j]]
+        the_color_array[i][j] = color_dic[the_color_array[i][j]]
+        the_string_array[i][j] = translate[the_color_array[i][j]]
 
     
     
     
-    caption="Current state of the puzzle. Textual version: "+str(s)        
+    caption="Current state of the puzzle. Textual version: "+Missionaries.describe_state(s)
     the_state_array = state_array(color_array=the_color_array,
                                   string_array=the_string_array,
                                   text_font=myFont,

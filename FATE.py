@@ -1,17 +1,17 @@
 import copy
 
-'''Missionaries.py
+'''
+Missionaries.py
 ("Missionaries and Cannibals" problem)
 A SOLUZION problem formulation.
 The XML-like tags used here may not be necessary, in the end.
 But for now, they serve to identify key sections of this 
-problem formulation.    It is important that COMMON_CODE come
+problem formulation. It is important that COMMON_CODE come
 before all the other sections (except METADATA), including COMMON_DATA.
 
 This version includes a check for the use of the Tk graphics client.
 If this client is being used, then it loads the visualization module:
 Missionaries_Array_VIS_FOR_TK.py.
-
 '''
 #<METADATA>
 SOLUZION_VERSION = "1.0"
@@ -45,13 +45,16 @@ def move(olds,m,c):
     pass
 
 def describe_state(s):
-    pass
+    caption = "Polulation:", s['p'], "Gold:", s['gold'], "Wood:", s['wood'], "Food:", s['food'], "Living Quality:", s['lq'], "Temp.:", s['temp']
+    return str(caption)
 
 def goal_test(s):
-    pass
+    if s['temp'] < 2 and s['lq'] > 60 and s['p'] > 4500:
+        return True
+    return False
 
 def goal_message(s):
-    return ""
+    return "Wow, you achieved the impossible!"
 
 
 class Operator:
@@ -68,28 +71,29 @@ class Operator:
 #</COMMON_CODE>
 
 #<INITIAL_STATE>
-'''
-Block Code Index:
 
-0: Plants
-1: Empty Space
-2: Cattle Farm
-3: Coal Mine
-4: Power Plant
-5: House
-6: Ice
-7: Ocean
-'''
+    '''
+    Block Code Index:
+
+    0: Plants
+    1: Empty Space
+    2: Cattle Farm
+    3: Coal Mine
+    4: Power Plant
+    5: House
+    6: Ice
+    7: Ocean
+    '''
 
 INITIAL_STATE = {
-                'Population': 100,
-                'Greenhouse Gas Level': 0,
-                'Gold': 200,
-                'Wood': 0,
-                'Food': 0,
-                'Living Quality': 100,
-                'Temp.': 0,
-                'Board': [ [0]*10 ]*9 + [[7,7,7,7,7,7,7,7,7,6]]
+                'p': 100,
+                'gg_level': 0,
+                'gold': 200,
+                'wood': 0,
+                'food': 0,
+                'lq': 100,
+                'temp': 0,
+                'board': [ [0]*10 ]*9 + [[7,7,7,7,7,7,7,7,7,6]]
                 }
 #</INITIAL_STATE>
 

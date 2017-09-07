@@ -1,3 +1,5 @@
+import copy
+
 '''Missionaries.py
 ("Missionaries and Cannibals" problem)
 A SOLUZION problem formulation.
@@ -33,24 +35,24 @@ PROBLEM_DESC=\
 
 
 def copy_state(s):
+    return copy.deepcopy(s)
+
+
+def can_move(s,m,c):
     pass
 
-'''
-def can_move(s,m,c):
-
-
 def move(olds,m,c):
-
+    pass
 
 def describe_state(s):
-
+    pass
 
 def goal_test(s):
-
+    pass
 
 def goal_message(s):
     return ""
-'''
+
 
 class Operator:
     def __init__(self, name, precond, state_transf):
@@ -66,6 +68,19 @@ class Operator:
 #</COMMON_CODE>
 
 #<INITIAL_STATE>
+'''
+Block Code Index:
+
+0: Plants
+1: Empty Space
+2: Cattle Farm
+3: Coal Mine
+4: Power Plant
+5: House
+6: Ice
+7: Ocean
+'''
+
 INITIAL_STATE = {
                 'Population': 100,
                 'Greenhouse Gas Level': 0,
@@ -74,14 +89,18 @@ INITIAL_STATE = {
                 'Food': 0,
                 'Living Quality': 100,
                 'Temp.': 0,
-                'Board': [ [0]*10 ]*10
+                'Board': [ [0]*10 ]*9 + [[7,7,7,7,7,7,7,7,7,6]]
                 }
 #</INITIAL_STATE>
 
 #<OPERATORS>
+MC_combinations = [(1,0),(2,0),(3,0),(1,1),(2,1)]
 
-
-
+OPERATORS = [Operator(
+    "Cross the river with "+str(m)+" missionaries and "+str(c)+" cannibals",
+    lambda s, m1=m, c1=c: can_move(s,m1,c1),
+    lambda s, m1=m, c1=c: move(s,m1,c1) ) 
+    for (m,c) in MC_combinations]
 #</OPERATORS>
 
 #<GOAL_TEST> (optional)

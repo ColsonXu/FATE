@@ -38,70 +38,76 @@ def copy_state(s):
     return copy.deepcopy(s)
 
 
-def isActionAvailable(state, action, loc):
+def isActionAvailable(state, action):
     # WIP, temporarily returns True
     return True
 
 
-def takeAction(state, action, loc):
+def takeAction(state, action):
     newState = copy_state(state)
 
     if action == 'Build cattle farm':
-        newState['board'][loc[0]][loc[1]] = 2
+        j = int(input("Please enter col: ")) - 1
+        i = int(input("Please enter col: ")) - 1
+
+        newState['board'][i][j] = 2
 
     elif action == 'Burn down forest':
-        left_edge = loc[0] == 0 and (not loc[1] == 0) and (not loc[1] == 9)
-        right_edge = loc[0] == 9 and (not loc[1] == 0) and (not loc[1] == 9)
-        up_edge = loc[1] == 0 and (not loc[0] == 0) and (not loc[0] == 9)
-        low_edge = loc[1] == 9 and (not loc[0] == 0) and (not loc[0] == 9)
-        ul_corner = loc[0] == 0 and loc[1] == 0
-        ur_corner = loc[0] == 9 and loc[1] == 0
-        dl_corner = loc[0] == 0 and loc[1] == 9
-        dr_corner = loc[0] == 9 and loc[1] == 9
+        j = int(input("Please enter col: ")) - 1
+        i = int(input("Please enter col: ")) - 1
 
-        if newState['board'][loc[0]][loc[1]] == 7:
+        left_edge = i == 0 and (not j == 0) and (not j == 9)
+        right_edge = i == 9 and (not j == 0) and (not j == 9)
+        up_edge = j == 0 and (not i == 0) and (not i == 9)
+        low_edge = j == 9 and (not i == 0) and (not i == 9)
+        ul_corner = i == 0 and j == 0
+        ur_corner = i == 9 and j == 0
+        dl_corner = i == 0 and j == 9
+        dr_corner = i == 9 and j == 9
+
+        if newState['board'][i][j] == 7:
             print('You cannot burn down ocean.')
         else:
-            newState['board'][loc[0]][loc[1]] = 1
+            newState['board'][i][j] = 1
 
             if left_edge:
                 op_blocks = [
-                [loc[0] + 1, loc[1]],
-                [loc[0], loc[1] - 1],
-                [loc[0], loc[1] + 1]
+                [i + 1, j],
+                [i, j - 1],
+                [i, j + 1]
                 ]
             elif right_edge:
                 op_blocks = [
-                [loc[0] - 1, loc[1]],
-                [loc[0], loc[1] - 1],
-                [loc[0], loc[1] + 1]
+                [i - 1, j],
+                [i, j - 1],
+                [i, j + 1]
                 ]
             elif up_edge:
                 op_blocks = [
-                [loc[0] - 1, loc[1]],
-                [loc[0] + 1, loc[1]],
-                [loc[0], loc[1] + 1]
+                [i - 1, j],
+                [i + 1, j],
+                [i, j + 1]
                 ]
             elif low_edge:
                 op_blocks = [
-                [loc[0] - 1, loc[1]],
-                [loc[0] + 1, loc[1]],
-                [loc[0], loc[1] - 1]
+                [i - 1, j],
+                [i + 1, j],
+                [i, j - 1]
                 ]
             elif ul_corner:
                 op_blocks = [
-                [loc[0] + 1, loc[1]],
-                [loc[0], loc[1] + 1]
+                [i + 1, j],
+                [i, j + 1]
                 ]
             elif ur_corner:
                 op_blocks = [
-                [loc[0] - 1][loc[1]],
-                [loc[0]][loc[1] + 1]
+                [i - 1][j],
+                [i][j + 1]
                 ]
             elif dl_corner:
                 op_blocks = [
-                [loc[0] + 1, loc[1]],
-                [loc[0], loc[1] - 1]
+                [i + 1, j],
+                [i, j - 1]
                 ]
             elif dr_corner:
                 for i in range(10):
@@ -109,10 +115,10 @@ def takeAction(state, action, loc):
                         newState['board'][i][j] = 7
             elif not (left_edge or right_edge or up_edge or low_edge):
                 op_blocks = [
-                [loc[0] - 1, loc[1]],
-                [loc[0] + 1, loc[1]],
-                [loc[0], loc[1] - 1],
-                [loc[0], loc[1] + 1]
+                [i - 1, j],
+                [i + 1, j],
+                [i, j - 1],
+                [i, j + 1]
                 ]
             
             if not dr_corner:
@@ -122,16 +128,24 @@ def takeAction(state, action, loc):
         
 
     elif action == 'Build house':
-        newState['board'][loc[0]][loc[1]] = 5
+        j = int(input("Please enter col: ")) - 1
+        i = int(input("Please enter col: ")) - 1
+        newState['board'][i][j] = 5
 
     elif action == 'Cut down forest':
-        newState['board'][loc[0]][loc[1]] = 1
+        j = int(input("Please enter col: ")) - 1
+        i = int(input("Please enter col: ")) - 1
+        newState['board'][i][j] = 1
 
     elif action == 'Mine coal':
-        newState['board'][loc[0]][loc[1]] = 3
+        j = int(input("Please enter col: ")) - 1
+        i = int(input("Please enter col: ")) - 1
+        newState['board'][i][j] = 3
 
     elif action == 'Build power plant':
-        newState['board'][loc[0]][loc[1]] = 4
+        j = int(input("Please enter col: ")) - 1
+        i = int(input("Please enter col: ")) - 1
+        newState['board'][i][j] = 4
 
     return newState
 
@@ -202,19 +216,19 @@ INITIAL_STATE = {
 
 #<OPERATORS>
 actions = [
-            ('Burn down forest', (9,9)), 
-            ('Build cattle farm', (0,1)), 
-            ('Build house', (0,2)), 
-            ('Cut down forest', (0,3)), 
-            ('Mine coal', (0,4)), 
-            ('Build power plant', (0,5))
+            'Burn down forest', 
+            'Build cattle farm', 
+            'Build house', 
+            'Cut down forest', 
+            'Mine coal', 
+            'Build power plant'
           ]
 
 OPERATORS = [Operator(
-    action + " on row " + str(loc[0] + 1) + ", column " + str(loc[1] + 1),
-    lambda state, action1 = action, loc1 = loc: isActionAvailable(state, action1, loc1),
-    lambda state, action1 = action, loc1 = loc: takeAction(state, action1, loc1))
-    for (action, loc) in actions]
+    action,
+    lambda state, action1 = action: isActionAvailable(state, action1),
+    lambda state, action1 = action: takeAction(state, action1))
+    for action in actions]
 #</OPERATORS>
 
 #<GOAL_TEST> (optional)

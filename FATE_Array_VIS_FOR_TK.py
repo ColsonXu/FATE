@@ -1,6 +1,6 @@
-'''FATE_Array_VIS_FOR_TK.py
-Version of Aug. 5, 2017.
-
+'''
+FATE_Array_VIS_FOR_TK.py
+Version of Sep. 6, 2017.
 '''
 
 from show_state_array import initialize_tk, state_array, state_display, STATE_WINDOW, test

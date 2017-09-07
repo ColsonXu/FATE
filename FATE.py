@@ -16,7 +16,7 @@ Missionaries_Array_VIS_FOR_TK.py.
 #<METADATA>
 SOLUZION_VERSION = "1.0"
 PROBLEM_NAME = "FATE"
-PROBLEM_VERSION = "1.1"
+PROBLEM_VERSION = "0.1"
 PROBLEM_AUTHORS = ['Colson Xu', 'Leo Liao', 'Yujia Lin', 'Yuxuan Lu']
 PROBLEM_CREATION_DATE = "5-SEP-2017"
 
@@ -41,17 +41,21 @@ def copy_state(s):
 def can_move(s,m,c):
     pass
 
+
 def move(olds,m,c):
     pass
+
 
 def describe_state(s):
     caption = "Polulation:", s['p'], "Gold:", s['gold'], "Wood:", s['wood'], "Food:", s['food'], "Living Quality:", s['lq'], "Temp.:", s['temp']
     return str(caption)
 
+
 def goal_test(s):
     if s['temp'] < 2 and s['lq'] > 60 and s['p'] > 4500:
         return True
     return False
+
 
 def goal_message(s):
     return "Wow, you achieved the impossible!"
@@ -68,6 +72,7 @@ class Operator:
 
     def apply(self, s):
         return self.state_transf(s)
+
 #</COMMON_CODE>
 
 #<INITIAL_STATE>

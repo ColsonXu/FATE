@@ -35,7 +35,27 @@ PROBLEM_DESC=\
 
 
 def copy_state(s):
-    return copy.deepcopy(s)
+    copied_state = {
+                   'p': None,
+                   'gg': None,
+                   'gold': None,
+                   'wood': None,
+                   'food': None,
+                   'lq': None,
+                   'temp': None,
+                   'board': None
+                   }
+
+    copied_state['p'] = s['p']
+    copied_state['gg'] = s['gg']
+    copied_state['gold'] = s['gold']
+    copied_state['wood'] = s['wood']
+    copied_state['food'] = s['food']
+    copied_state['lq'] = s['lq']
+    copied_state['temp'] = s['temp']
+    copied_state['board'] = s['board']
+
+    return copied_state
 
 
 def isActionAvailable(state, action, loc):
@@ -44,7 +64,7 @@ def isActionAvailable(state, action, loc):
 
 def takeAction(state, action, loc):
     newState = copy_state(state)
-    if action == 'Grow beef':
+    if action == 'Build Cattle Farm':
         newState['board'][loc[0]][loc[1]] = 2
     return newState
 
@@ -92,25 +112,23 @@ class Operator:
     7: Ocean
     '''
 
-row = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-board = [row]
-for i in range(8):
-    board.append(row[:])
-board.append([7, 7, 7, 7, 7, 7, 7, 7, 7, 6])
+board = [[0] * 10] * 9 + [[7] * 9 + [6]]
+
 INITIAL_STATE = {
-                'p': 100,
-                'gg_level': 0,
-                'gold': 200,
-                'wood': 0,
-                'food': 0,
-                'lq': 100,
-                'temp': 0,
-                'board': board
+                'p': 100,               # Population
+                'gg': 0,                # Greenhouse Gas
+                'gold': 200,            # Gold
+                'wood': 0,              # Wood
+                'food': 0,              # Food
+                'lq': 100,              # Living Quality
+                'temp': 0,              # Average Temperature
+                'board': board          # Game Board
                 }
+
 #</INITIAL_STATE>
 
 #<OPERATORS>
-actions = [('Grow beef', (0, 0))]
+actions = [('Build Cattle Farm', (0, 0))]
 
 OPERATORS = [Operator(
     action + " on row " + str(loc[0]) + ", column " + str(loc[1]),

@@ -33,7 +33,7 @@ The initial state of this game will be represented by a 10*10 panel with 9 blue 
 
 Some of the operators will cost the player some __'Resources'__ as it will be unrealistic to do them for free. For example, building a __'Power Plant'__ will cost the player 5 __'Wood'__ and 15 __'Gold'__. A list of essential variables and their initial or maximum value is shown below.
 
-  * __Initial Gold: 200__
+  * __Initial Gold: 50__
   * __Initial Wood: 0__
   * __Initial Δ Temp.: 0__
   * __Initial Population: 100__
@@ -49,15 +49,15 @@ There will be only one role which is the leader of humanity in our game.
 ### Objective
 Players should choose operators sustainably to build houses, build power plants, mine coals. All operators affect living quality of the residents. The player should think carefully to keep all the variables in check. Player should strive to go through each of the hypothesized stages listed below.
 
-* __Stage1__: Player starts with blank panel(appears to be green but without any man-build constructions), all the variables are initialized
+* __Stage 1__: Player starts with blank panel(appears to be green but without any man-build constructions), all the variables are initialized
 
-* __Stage2__: Player starts to burn/cut down forest to gain lands that’s suitable for building supplies and also earn fundamental material(woods)
+* __Stage 2__: Player starts to burn/cut down forest to gain lands that’s suitable for building supplies and also earn fundamental material(woods)
 
-* __Stage3__: While LQ increases and the society grows larger, the society endures explicit temperature Increase, player should start considering making balance between environment protection and growth of population.
+* __Stage 3__: While LQ increases and the society grows larger, the society endures explicit temperature Increase, player should start considering making balance between environment protection and growth of population.
 
-* __Stage4__: As the population grows larger, massive industrialization and deforestation is inevitable, which produce considerable amount of greenhouse gases and sharp decrease of human living quality. Meanwhile water level of the ocean starts to increase rapidly and random wildfire might cause permanent loss of forest in large areas.
+* __Stage 4__: As the population grows larger, massive industrialization and deforestation is inevitable, which produce considerable amount of greenhouse gases and sharp decrease of human living quality. Meanwhile water level of the ocean starts to increase rapidly and random wildfire might cause permanent loss of forest in large areas.
 
-* __Stage5__: Temperature of the virtual world and the CO2 level will exceed its maximum level, the world is flooded by the melted water from the glacier. The living quality of human race will reach the bottom which leads to degradation of habitats and eventually the extinction of human race  But you still have chance to win if you survive certain number of rounds.
+* __Stage 5__: Temperature of the virtual world and the CO2 level will exceed its maximum level, the world is flooded by the melted water from the glacier. The living quality of human race will reach the bottom which leads to degradation of habitats and eventually the extinction of human race  But you still have chance to win if you survive certain number of rounds.
 
 
 <br>
@@ -78,7 +78,7 @@ The players can build villages, power plants, mine coals on empty spaces. Making
 ### Initial state
 A virtual world consists of 10 * 10 grid is generated. Initially, the world is rich in natural resources. The game board is represented by a two-dimensional list, and each item in sub-lists represents one block on the grid. For each block, an integer is used to represent the type of the block. Initial layout of these elements in the world is fixed and is always the same in every game session.
 
-The player receives 200 __'Gold'__ as the currency. The player should utilize this resource to develop a civilization and keep the __'LQ'__ of his/her citizens high. These values are stored in a dictionary. Other variables, such as __'GG'__, __'Wood'__, __'Food'__, and __'Δ Temp.'__, are 0 when a new game session starts.
+The player receives 50 __'Gold'__ as the currency. The player should utilize this resource to develop a civilization and keep the __'LQ'__ of his/her citizens high. These values are stored in a dictionary. Other variables, such as __'GG'__, __'Wood'__, __'Food'__, and __'Δ Temp.'__, are 0 when a new game session starts.
 
 <br>
 

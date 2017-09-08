@@ -49,7 +49,13 @@ def isActionAvailable(state, action):
         return False
     elif state['nextInput'] == 'action':
         if not 'Select' in action and action != 'Dummy operator':
-            return True
+            i = state['selectedRow']
+            j = state['selectedCol']
+            blockState = state['board'][i][j]
+            mutableStates = [0, 1]
+            if len(list(filter(lambda x: blockState == x, mutableStates))):
+                if blockState != action:
+                    return True
         return False
 
 def takeAction(state, action):

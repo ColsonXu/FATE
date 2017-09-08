@@ -47,7 +47,18 @@ There will be only one role which is the leader of humanity in our game.
 <br>
 
 ### Objective
-The role should try to use operators sustainably to build houses, build power plants, mine coals. All operators affect living quality of the residents. The player should think carefully to keep all the variables in check.
+Players should choose operators sustainably to build houses, build power plants, mine coals. All operators affect living quality of the residents. The player should think carefully to keep all the variables in check. Player should strive to go through each of the hypothesized stages listed below.
+
+* __Stage1__: Player starts with blank panel(appears to be green but without any man-build constructions), all the variables are initialized
+
+* __Stage2__: Player starts to burn/cut down forest to gain lands that’s suitable for building supplies and also earn fundamental material(woods)
+
+* __Stage3__: While LQ increases and the society grows larger, the society endures explicit temperature Increase, player should start considering making balance between environment protection and growth of population.
+
+* __Stage4__: As the population grows larger, massive industrialization and deforestation is inevitable, which produce considerable amount of greenhouse gases and sharp decrease of human living quality. Meanwhile water level of the ocean starts to increase rapidly and random wildfire might cause permanent loss of forest in large areas.
+
+* __Stage5__: Temperature of the virtual world and the CO2 level will exceed its maximum level, the world is flooded by the melted water from the glacier. The living quality of human race will reach the bottom which leads to degradation of habitats and eventually the extinction of human race  But you still have chance to win if you survive certain number of rounds.
+
 
 <br>
 
@@ -91,4 +102,4 @@ Our first working code will have all the operators mentioned above.  `is_applica
 <br>
 
 ### Specification of Second Working code
-WE FLY
+On Tuesday, we will be switched from dictionary representation of the state to object representation

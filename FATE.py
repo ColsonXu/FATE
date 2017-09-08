@@ -33,10 +33,8 @@ PROBLEM_DESC=\
 
 #<COMMON_CODE>
 
-'''
-    A list which stores integers representing a state that can change to other
-    states.
-'''
+'''A list which stores integers representing a state that can change to other
+states.'''
 MUTABLE_STATES = [0, 1, 3]
 
 def copy_state(s):

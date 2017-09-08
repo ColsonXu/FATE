@@ -189,9 +189,9 @@ actions = [
             'Burn down forest',
             'Build cattle farm',
             'Mine coal',
-            'Build power plant'
+            'Build power plant',
             'Build house',
-            'Cut down forest',
+            'Cut down forest'
           ]
 
 OPERATORS = [Operator(

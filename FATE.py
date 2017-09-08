@@ -43,16 +43,16 @@ def isActionAvailable(state, action):
     return True
 
 
-def takeAction(state, action):#-0.5gg per squre of forest per state
+def takeAction(state, action):
     newState = copy_state(state)
     j = int(input("Please enter row: ")) - 1
     i = int(input("Please enter col: ")) - 1
 
     if action == 'Build cattle farm':
         newState['board'][i][j] = 2
-        state['wood'] -= 5
-        state['gold'] -= 5
-        state['food'] += 100 #10gg per state WIP
+        newState['wood'] -= 5
+        newState['gold'] -= 5
+        newState['food'] += 100 
         
     elif action == 'Burn down forest':
          if newState['board'][i][j] == 7:
@@ -73,26 +73,33 @@ def takeAction(state, action):#-0.5gg per squre of forest per state
                             state['board'][block[0]][block[1]] == 7):
                         newState['board'][block[0]][block[1]] = 1
             for 0 in range(len(op_blocks)):
-                state['gg'] += 25
+                newState['gg'] += 25
         
         
     elif action == 'Build house':
         newState['board'][i][j] = 5
-        state['gold'] -= 5#capacity1500, LQ decrease by 10 if no power, by 30 if full WIP
+        newState['gold'] -= 5#capacity1500, LQ decrease by 10 if no power, by 30 if full WIP
 
     elif action == 'Cut down forest':
         newState['board'][i][j] = 1
-        state['wood'] += 5
-        state['gold'] -= 15
+        newState['wood'] += 5
+        newState['gold'] -= 15
 
     elif action == 'Mine coal':
         newState['board'][i][j] = 3
-        state['gold'] -= 10# each state gold += 10 WIP
-        state['gg'] += 20
+        newState['gold'] -= 10
+        newState['gg'] += 20
 
     elif action == 'Build power plant':
         newState['board'][i][j] = 4
-        #seach state  gg += 15, pre-req mining one, can supply 3 house
+        #pre-req mining one, can supply 3 house
+
+    for i in range(10):
+        newState['gg'] += 15 * state['board'][i].count(4)
+        newState['gg'] += 10 * state['board'][i].count(2)
+        newState['gg'] -= 0.5 * state['board'][i].count(0)
+        newState['gold'] += 10 * state['board'][i].count(3)
+        #decrease of food in progress, 1 food for 5 people 
 
     return newState
 

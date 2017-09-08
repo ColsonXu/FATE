@@ -229,10 +229,10 @@ actions = [
             'Select column 10',
             'Burn down forest',
             'Build cattle farm',
-            'Build house',
-            'Cut down forest',
             'Mine coal',
             'Build power plant'
+            'Build house',
+            'Cut down forest',
           ]
 
 OPERATORS = [Operator(

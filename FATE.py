@@ -33,6 +33,7 @@ PROBLEM_DESC=\
 
 #<COMMON_CODE>
 
+MUTABLE_STATES = [0, 1, 3]
 
 def copy_state(s):
     return copy.deepcopy(s)
@@ -45,16 +46,30 @@ def isActionAvailable(state, action):
         return False
     elif state['nextInput'] == 'col':
         if 'Select column' in action:
-            return True
+            i = state['selectedRow']
+            col = int(action[-1])
+            if col == 0:
+                j = 9
+            else:
+                j = col - 1
+            blockState = state['board'][i][j]
+            if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
+                return True
         return False
     elif state['nextInput'] == 'action':
         if not 'Select' in action and action != 'Dummy operator':
             i = state['selectedRow']
             j = state['selectedCol']
             blockState = state['board'][i][j]
-            mutableStates = [0, 1]
-            if len(list(filter(lambda x: blockState == x, mutableStates))):
-                if blockState != action:
+            if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))) and \
+            blockState != action:
+                if blockState == 0 and action in ['Burn down forest', \
+                'Cut down forest']:
+                    return True
+                elif blockState == 1 and action in ['Build cattle farm', \
+                'Mine coal', 'Build house']:
+                    return True
+                elif blockState == 3 and action == 'Build power plant':
                     return True
         return False
 

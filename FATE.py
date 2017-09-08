@@ -186,7 +186,7 @@ def takeAction(state, action):
 def describe_state(s):
     caption = "Polulation:", s['p'], "Gold:", s['gold'], \
               "Wood:", s['wood'], "Food:", s['food'], "Living Quality:", \
-              s['lq'], "Temp.:", s['temp']
+              s['lq'], "ΔTemp.:", s['temp']
     return str(caption)
 
 

@@ -62,7 +62,7 @@ def takeAction(state, action):
 
         if newState['board'][i][j] == 7:
             print('You cannot burn down ocean.')
-         else:
+        else:
             op_blocks = [[i, j]]
             if i > 0:
                 op_blocks.append([i - 1, j])

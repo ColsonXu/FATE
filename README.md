@@ -38,3 +38,47 @@ Some of the operators will cost the player some __'Resources'__ as it will be un
   * __Initial Δ Temp.: 0__
   * __Initial Population: 100__
   * __LQ MAX: 100__
+
+<br>
+
+### Role of the Player
+There will be only one role which is the leader of humanity in our game.
+
+<br>
+
+### Objective
+The role should try to use operators sustainably to build houses, build power plants, mine coals. All operators affect living quality of the residents. The player should think carefully to keep all the variables in check.
+
+<br>
+
+### Player Affordance
+The players can build villages, power plants, mine coals on empty spaces. Making right decisions is crucial to maintain the growth of civilization while minimizing damage to environment. Construction operators available for the user are building villages, power plants, coal mine and farms. Players should consider the operators as a double-edged sword which can develop civilization but also harm their living environment. Players will be able to see their current situation at the bottom of the game board, including the following variables, their related algorithm is listed below.
+
+  * __Greenhouse Gas Impact on Temp:__ 5 unit raise 0.05C
+  * __Temp +0.5C:__ LQ - 10
+  * __Random Wildfire Starts when:__ Temp. > 0.35C
+  * __3 block of sea created/3 states when:__ Temp. + 1C
+  * __LQ decrease by 30/state when:__ Population > 300 and no place to live
+  * __Requires 100 Food per 500 Population__
+  * __Empty Space besides forest grows back to forest after three turns__
+
+<br>
+
+### Initial state
+A virtual world consists of 10 * 10 grid is generated. Initially, the world is rich in natural resources. The game board is represented by a two-dimensional list, and each item in sub-lists represents one block on the grid. For each block, an integer is used to represent the type of the block. Initial layout of these elements in the world is fixed and is always the same in every game session.
+
+The player receives 200 __'Gold'__ as the currency. The player should utilize this resource to develop a civilization and keep the __'LQ'__ of his/her citizens high. These values are stored in a dictionary. Other variables, such as __'GG'__, __'Wood'__, __'Food'__, and __'Δ Temp.'__, are 0 when a new game session starts.
+
+<br>
+
+### Operators
+The first operator that a player should apply is “burn forest”. Oceans and glaciers are not places where human beings can live for a long term, so the player should want to get some spaces on lands. However, since all lands are covered by forest and plants, the player needs to burn some forest to get empty spaces.
+
+This operator is organizational and indirect because it helps the player get ready for further development, gain more resources, and improve living quality. It is not an operator which would carry out a direct action to solve the problem.
+
+This operator turns the block where the player chooses and its adjacent blocks into empty spaces. It leads to increase in __'GG'__: the gas is produced during tree combustion; since the amount of trees is reduced, the rate of carbon dioxide absorption of trees slows down. This also causes increase in __'Δ Temp.'__.
+
+<br>
+
+### Goals and Scores
+There are two goal states players can achieve. The first one is that players make a perfect balance between civilization and their damage to the eco system. To be specific, after n terns (n >= 30) __'LQ'__ must be greater than 50, and __'Δ Temp.'__ should be less than 2C. This is extremely hard to achieve, due to frequent deforestation and constantly increasing population. Another possible goal state is that the environment is depleted to a state that is no longer suitable for living. The score is the round of games you play without dying.

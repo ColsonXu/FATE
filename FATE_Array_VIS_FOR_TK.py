@@ -21,7 +21,7 @@ def render_state(s):
     global myFont
     if not myFont:
         myFont = font.Font(family="Helvetica", size=10, weight="bold")
-    print("In render_state, state is " + str(s))
+    # print("In render_state, state is " + str(s))
 
     # Create the default array of colors
     plants = (67,160,71)    # 0
@@ -78,5 +78,5 @@ def render_state(s):
                                   string_array = the_string_array,
                                   text_font = myFont,
                                   caption = caption)
-    print("the_state_array is: " + str(the_state_array))
+    # print("the_state_array is: " + str(the_state_array))
     the_state_array.show()

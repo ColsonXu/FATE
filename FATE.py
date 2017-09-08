@@ -50,7 +50,10 @@ def takeAction(state, action):
         try:
             j = int(input("Please enter row: ")) - 1
             i = int(input("Please enter col: ")) - 1
-            break
+            if 0 <= i <= 10 and 0 <= j <= 10:
+                break
+            else:
+                print("You have chosen a place beyound the world, please try again.")
         except:
             print("You entered something invalid, please try again.")
 

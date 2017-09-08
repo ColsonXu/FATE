@@ -81,8 +81,8 @@ def client_mainloop():
   DEPTH = 0
   PROBLEM.render_state(CURRENT_STATE)
   while(True):
-    print("\nStep "+str(STEP)+", Depth "+str(DEPTH))
-    print("CURRENT_STATE = "+str(CURRENT_STATE))
+    # print("\nStep "+str(STEP)+", Depth "+str(DEPTH))
+    # print("CURRENT_STATE = "+str(CURRENT_STATE))
     if PROBLEM.goal_test(CURRENT_STATE):
       print('''CONGRATULATIONS!
 You have solved the problem by reaching a goal state.

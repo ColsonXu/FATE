@@ -47,7 +47,7 @@ class state_array:
     for r in self.color_array:
       j = 0
       for c in r:
-        print(c, end=' ')
+        # print(c, end=' ')
         tk_rgb = "#%02x%02x%02x" % c
         STATE_WINDOW.canvas.create_rectangle(x0+j*cellw, y0+i*cellh,
                                              x0+(j+1)*cellw, y0+(i+1)*cellh,
@@ -59,6 +59,7 @@ class state_array:
                                           font=self.text_font)
         j += 1
       i += 1
+      print()
       print()
     STATE_WINDOW.label.config(text=self.caption)
 

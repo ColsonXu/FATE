@@ -44,9 +44,15 @@ def isActionAvailable(state, action):
 
 
 def takeAction(state, action):
+
     newState = copy_state(state)
-    j = int(input("Please enter row: ")) - 1
-    i = int(input("Please enter col: ")) - 1
+    while True:
+        try:
+            j = int(input("Please enter row: ")) - 1
+            i = int(input("Please enter col: ")) - 1
+            break
+        except:
+            print("You entered something invalid, please try again.")
 
     if action == 'Build cattle farm':
         newState['board'][i][j] = 2

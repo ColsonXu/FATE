@@ -56,71 +56,18 @@ def takeAction(state, action):
         j = int(input("Please enter col: ")) - 1
         i = int(input("Please enter col: ")) - 1
 
-        left_edge = i == 0 and (not j == 0) and (not j == 9)
-        right_edge = i == 9 and (not j == 0) and (not j == 9)
-        up_edge = j == 0 and (not i == 0) and (not i == 9)
-        low_edge = j == 9 and (not i == 0) and (not i == 9)
-        ul_corner = i == 0 and j == 0
-        ur_corner = i == 9 and j == 0
-        dl_corner = i == 0 and j == 9
-        dr_corner = i == 9 and j == 9
-
         if newState['board'][i][j] == 7:
             print('You cannot burn down ocean.')
         else:
-            newState['board'][i][j] = 1
-
-            if left_edge:
-                op_blocks = [
-                [i + 1, j],
-                [i, j - 1],
-                [i, j + 1]
-                ]
-            elif right_edge:
-                op_blocks = [
-                [i - 1, j],
-                [i, j - 1],
-                [i, j + 1]
-                ]
-            elif up_edge:
-                op_blocks = [
-                [i - 1, j],
-                [i + 1, j],
-                [i, j + 1]
-                ]
-            elif low_edge:
-                op_blocks = [
-                [i - 1, j],
-                [i + 1, j],
-                [i, j - 1]
-                ]
-            elif ul_corner:
-                op_blocks = [
-                [i + 1, j],
-                [i, j + 1]
-                ]
-            elif ur_corner:
-                op_blocks = [
-                [i - 1][j],
-                [i][j + 1]
-                ]
-            elif dl_corner:
-                op_blocks = [
-                [i + 1, j],
-                [i, j - 1]
-                ]
-            elif dr_corner:
-                for i in range(10):
-                    for j in range(10):
-                        newState['board'][i][j] = 7
-            elif not (left_edge or right_edge or up_edge or low_edge):
-                op_blocks = [
-                [i - 1, j],
-                [i + 1, j],
-                [i, j - 1],
-                [i, j + 1]
-                ]
-            
+            op_blocks = [[i, j]]
+            if i > 0:
+                op_blocks.append([i - 1, j])
+            if i < 9:
+                op_blocks.append([i + 1, j])
+            if j > 0:
+                op_blocks.append([i, j - 1])
+            if j < 9:
+                op_blocks.append([i, j + 1])
             if not dr_corner:
                 for block in op_blocks:
                     if not (state['board'][block[0]][block[1]] == 6 or state['board'][block[0]][block[1]] == 7):

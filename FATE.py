@@ -47,13 +47,13 @@ def takeAction(state, action):
     newState = copy_state(state)
 
     if action == 'Build cattle farm':
-        j = int(input("Please enter col: ")) - 1
+        j = int(input("Please enter row: ")) - 1
         i = int(input("Please enter col: ")) - 1
 
         newState['board'][i][j] = 2
 
     elif action == 'Burn down forest':
-        j = int(input("Please enter col: ")) - 1
+        j = int(input("Please enter row: ")) - 1
         i = int(input("Please enter col: ")) - 1
 
         if newState['board'][i][j] == 7:
@@ -75,22 +75,22 @@ def takeAction(state, action):
         
 
     elif action == 'Build house':
-        j = int(input("Please enter col: ")) - 1
+        j = int(input("Please enter row: ")) - 1
         i = int(input("Please enter col: ")) - 1
         newState['board'][i][j] = 5
 
     elif action == 'Cut down forest':
-        j = int(input("Please enter col: ")) - 1
+        j = int(input("Please enter row: ")) - 1
         i = int(input("Please enter col: ")) - 1
         newState['board'][i][j] = 1
 
     elif action == 'Mine coal':
-        j = int(input("Please enter col: ")) - 1
+        j = int(input("Please enter row: ")) - 1
         i = int(input("Please enter col: ")) - 1
         newState['board'][i][j] = 3
 
     elif action == 'Build power plant':
-        j = int(input("Please enter col: ")) - 1
+        j = int(input("Please enter row: ")) - 1
         i = int(input("Please enter col: ")) - 1
         newState['board'][i][j] = 4
 

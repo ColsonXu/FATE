@@ -102,4 +102,4 @@ Our first working code will have all the operators mentioned above.  `is_applica
 <br>
 
 ### Specification of Second Working code
-On Tuesday, we will be switched from dictionary representation of the state to object representation
+By Tuesday, we will be switched from dictionary to object for the state representation.

@@ -33,54 +33,80 @@ PROBLEM_DESC=\
 
 #<COMMON_CODE>
 
+def copy_state(oldState):
+    return copy.deepcopy(oldState)
 
-def copy_state(s):
-    return copy.deepcopy(s)
 
-
-def isActionAvailable(state, action):
-    if state['nextInput'] == 'row':
-        if 'Select row' in action:
+class Game_state:
+    def __init__(self, state):
+        self.state = state
+    def __copy__(self):
+        newState = Game_state(self.state)
+        return newState
+    def __str__(self):
+        s = self.state
+        caption = "Polulation:", s['p'], "Gold:", s['gold'], \
+          "Wood:", s['wood'], "Food:", s['food'], "Living Quality:", \
+          s['lq'], "Temp.:", s['temp']
+        return caption
+    def __eq__(self, other):
+        if self is other: return True
+        if self is None: return False
+        if other is None: return False
+        if self.state == other.state:
             return True
         return False
-    elif state['nextInput'] == 'col':
-        if 'Select column' in action:
-            return True
-        return False
-    elif state['nextInput'] == 'action':
-        if not 'Select' in action and action != 'Dummy operator':
-            return True
-        return False
+    def __hash__(self):
+        return str(self).__hash__()
 
-def takeAction(state, action):
-    newState = copy_state(state)
+    def isActionAvailable(self, action):
+        state = self.state
+        if state['nextInput'] == 'row':
+            print(action)
+            if 'Select row' in action:
+                return True
+            return False
+        elif state['nextInput'] == 'col':
+            if 'Select column' in action:
+                return True
+            return False
+        elif state['nextInput'] == 'action':
+            if not 'Select' in action and action != 'Dummy operator':
+                return True
+            return False
 
-    if state['nextInput'] == 'row':
-        newState['nextInput'] = 'col'
-        rowSelected = int(action[-1])
-        if rowSelected == 0:
-            newState['selectedRow'] = 9
-        else:
-            newState['selectedRow'] = rowSelected - 1
+    def takeAction(self, action):
+        newState = self.__copy__()
+        state = self.state
+        newState = newState.state
 
-    elif state['nextInput'] == 'col':
-        newState['nextInput'] = 'action'
-        colSelected = int(action[-1])
-        if colSelected == 0:
-            newState['selectedCol'] = 9
-        else:
-            newState['selectedCol'] = colSelected - 1
 
-    elif state['nextInput'] == 'action':
-        newState['nextInput'] = 'row'
-        i = state['selectedRow']
-        j = state['selectedCol']
+        if state['nextInput'] == 'row':
+            newState['nextInput'] = 'col'
+            rowSelected = int(action[-1])
+            if rowSelected == 0:
+                newState['selectedRow'] = 9
+            else:
+                newState['selectedRow'] = rowSelected - 1
 
-        if action == 'Build cattle farm':
-            newState['board'][i][j] = 2
-            newState['wood'] -= 5
-            newState['gold'] -= 5
-            newState['food'] += 100
+        elif state['nextInput'] == 'col':
+            newState['nextInput'] = 'action'
+            colSelected = int(action[-1])
+            if colSelected == 0:
+                newState['selectedCol'] = 9
+            else:
+                newState['selectedCol'] = colSelected - 1
+
+        elif state['nextInput'] == 'action':
+            newState['nextInput'] = 'row'
+            i = state['selectedRow']
+            j = state['selectedCol']
+
+            if action == 'Build cattle farm':
+                newState['board'][i][j] = 2
+                newState['wood'] -= 5
+                newState['gold'] -= 5
+                newState['food'] += 100
 
         elif action == 'Burn down forest':
             if i == 9 and j == 9:
@@ -145,7 +171,10 @@ def takeAction(state, action):
             #decrease of food in progress, 1 food for 5 people
         newState['temp'] = 0.05 * newState['gg']
             
-    return newState
+        return newState
+
+    
+
 
 def describe_state(s):
     caption = "Polulation:", s['p'], "Gold:", s['gold'], \
@@ -212,6 +241,8 @@ INITIAL_STATE = {
                 'selectedCol': 0        # Current column selected by the user
                 }
 
+
+state = Game_state(INITIAL_STATE)
 #</INITIAL_STATE>
 
 #<OPERATORS>
@@ -227,10 +258,12 @@ actions = ['Dummy operator']+\
             'Build power plant'
             ]
 
+
+
 OPERATORS = [Operator(
     action,
-    lambda state, action1 = action: isActionAvailable(state, action1),
-    lambda state, action1 = action: takeAction(state, action1))
+    lambda action1 = action: state.isActionAvailable(action1),
+    lambda action1 = action: state.takeAction(action1))
     for action in actions]
 #</OPERATORS>
 

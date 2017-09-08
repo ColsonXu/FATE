@@ -33,6 +33,10 @@ PROBLEM_DESC=\
 
 #<COMMON_CODE>
 
+'''
+    A list which stores integers representing a state that can change to other
+    states.
+'''
 MUTABLE_STATES = [0, 1, 3]
 
 def copy_state(s):
@@ -41,17 +45,23 @@ def copy_state(s):
 
 def isActionAvailable(state, action):
     if state['nextInput'] == 'action':
+        '''Filtrates all operators that are not a row/column selection operator
+        or a dummy operator.'''
         if not 'Select' in action and action != 'Dummy operator':
             return True
         return False
     elif state['nextInput'] == 'row':
+        '''Filtrates all operators that are a row selection operator.'''
         if 'Select row' in action:
             actionSelected = state['selectedAction']
+            '''Converts row selection to index of the list for the board.'''
             row = int(action[-1])
             if row == 0:
                 i = 9
             else:
                 i = row - 1
+            '''Loops through all blocks in the row and sees if there is any
+            block where the action selected is applicable.'''
             for j in range(10):
                 blockState = state['board'][i][j]
                 if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
@@ -67,15 +77,20 @@ def isActionAvailable(state, action):
                             return True
         return False
     elif state['nextInput'] == 'col':
+        '''Filtrates all operators that are a column selection operator.'''
         if 'Select column' in action:
             actionSelected = state['selectedAction']
             i = state['selectedRow']
+            '''Converts column selection to index of the second-level list for
+            the board.'''
             col = int(action[-1])
             if col == 0:
                 j = 9
             else:
                 j = col - 1
             blockState = state['board'][i][j]
+            '''Evaluates all blocks in the row selected and sees if there is any
+            block where the action selected is applicable.'''
             if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
                 blockState = state['board'][i][j]
                 if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
@@ -93,12 +108,18 @@ def isActionAvailable(state, action):
 def takeAction(state, action):
     newState = copy_state(state)
 
+    '''After the player selects an operator, FATE will change the pointer
+    storing type of the next input the player is going to make, `nextInput`, to
+    the next value it ought to have.
+    The order of entering those operators are action, row, and column.'''
+
     if state['nextInput'] == 'action':
         newState['nextInput'] = 'row'
         newState['selectedAction'] = action
 
     elif state['nextInput'] == 'row':
         newState['nextInput'] = 'col'
+        '''Converts row selection to index of the list for the board.'''
         rowSelected = int(action[-1])
         if rowSelected == 0:
             newState['selectedRow'] = 9
@@ -109,12 +130,15 @@ def takeAction(state, action):
         newState['nextInput'] = 'action'
         actionSelected = state['selectedAction']
         i = state['selectedRow']
+        '''Converts column selection to index of the second-level list for
+        the board.'''
         colSelected = int(action[-1])
         if colSelected == 0:
             j = 9
         else:
             j = colSelected - 1
 
+        '''Changes state of the block where the player chooses.'''
         if actionSelected == 'Build cattle farm':
             newState['board'][i][j] = 2
             newState['wood'] -= 5
@@ -166,15 +190,6 @@ def takeAction(state, action):
             newState['board'][i][j] = 4
             #pre-req mining one, can supply 3 house
 
-##   for reference:
-##    0: Plants
-##    1: Empty Space
-##    2: Cattle Farm
-##    3: Coal Mine
-##    4: Power Plant
-##    5: House
-##    6: Ice
-##    7: Ocean
         for i in range(10):
             newState['gg'] += 15 * state['board'][i].count(4)
             newState['gg'] += 10 * state['board'][i].count(2)
@@ -189,12 +204,10 @@ def describe_state(s):
               s['lq'], "ΔTemp.:", s['temp']
     return str(caption)
 
-
 def goal_test(s):
     if s['temp'] < 2 and s['lq'] > 60 and s['p'] > 4500:
         return True
     return False
-
 
 def goal_message(s):
     return "Wow, you achieved the impossible!"
@@ -251,17 +264,18 @@ INITIAL_STATE = {
 #</INITIAL_STATE>
 
 #<OPERATORS>
-# Dummy operator avoids the player to enter 0 for row 1, enters 1 for row 2, etc.
-actions = [
-            'Burn down forest',
+actions = [ 'Burn down forest',
             'Cut down forest',
             'Build cattle farm',
             'Mine coal',
             'Build power plant',
-            'Build house'
-          ] + \
-          ['Dummy operator' for i in range(5)] + \
-          ['Select %s %d' %(string, i) for string in ['row', 'column'] for i in range(1, 11)]
+            'Build house'] + \
+            ['Dummy operator' for i in range(5)] + \
+            ['Select %s %d' %(string, i) for string in ['row', 'column'] for i \
+            in range(1, 11)]
+'''Dummy operator allows the player to enter 11 rather than 6 for row
+1, enters 12 rather than 7 for row 2, etc., so the row and column
+selection process can be more user-friendly.'''
 
 OPERATORS = [Operator(
     action,

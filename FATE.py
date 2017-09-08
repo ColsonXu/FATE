@@ -40,12 +40,35 @@ def copy_state(s):
 
 
 def isActionAvailable(state, action):
-    if state['nextInput'] == 'row':
-        if 'Select row' in action:
+    if state['nextInput'] == 'action':
+        if not 'Select' in action and action != 'Dummy operator':
             return True
+        return False
+    elif state['nextInput'] == 'row':
+        if 'Select row' in action:
+            actionSelected = state['selectedAction']
+            row = int(action[-1])
+            if row == 0:
+                i = 9
+            else:
+                i = row - 1
+            for j in range(10):
+                blockState = state['board'][i][j]
+                if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
+                    blockState = state['board'][i][j]
+                    if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
+                        if blockState == 0 and actionSelected in \
+                        ['Burn down forest', 'Cut down forest']:
+                            return True
+                        elif blockState == 1 and actionSelected in \
+                        ['Build cattle farm', 'Mine coal', 'Build house']:
+                            return True
+                        elif blockState == 3 and actionSelected == 'Build power plant':
+                            return True
         return False
     elif state['nextInput'] == 'col':
         if 'Select column' in action:
+            actionSelected = state['selectedAction']
             i = state['selectedRow']
             col = int(action[-1])
             if col == 0:
@@ -54,29 +77,27 @@ def isActionAvailable(state, action):
                 j = col - 1
             blockState = state['board'][i][j]
             if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
-                return True
+                blockState = state['board'][i][j]
+                if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
+                    if blockState == 0 and actionSelected in \
+                    ['Burn down forest', 'Cut down forest']:
+                        return True
+                    elif blockState == 1 and actionSelected in \
+                    ['Build cattle farm', 'Mine coal', 'Build house']:
+                        return True
+                    elif blockState == 3 and actionSelected == 'Build power plant':
+                        return True
         return False
-    elif state['nextInput'] == 'action':
-        if not 'Select' in action and action != 'Dummy operator':
-            i = state['selectedRow']
-            j = state['selectedCol']
-            blockState = state['board'][i][j]
-            if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))) and \
-            blockState != action:
-                if blockState == 0 and action in ['Burn down forest', \
-                'Cut down forest']:
-                    return True
-                elif blockState == 1 and action in ['Build cattle farm', \
-                'Mine coal', 'Build house']:
-                    return True
-                elif blockState == 3 and action == 'Build power plant':
-                    return True
-        return False
+
 
 def takeAction(state, action):
     newState = copy_state(state)
 
-    if state['nextInput'] == 'row':
+    if state['nextInput'] == 'action':
+        newState['nextInput'] = 'row'
+        newState['selectedAction'] = action
+
+    elif state['nextInput'] == 'row':
         newState['nextInput'] = 'col'
         rowSelected = int(action[-1])
         if rowSelected == 0:
@@ -86,24 +107,21 @@ def takeAction(state, action):
 
     elif state['nextInput'] == 'col':
         newState['nextInput'] = 'action'
+        actionSelected = state['selectedAction']
+        i = state['selectedRow']
         colSelected = int(action[-1])
         if colSelected == 0:
-            newState['selectedCol'] = 9
+            j = 9
         else:
-            newState['selectedCol'] = colSelected - 1
+            j = colSelected - 1
 
-    elif state['nextInput'] == 'action':
-        newState['nextInput'] = 'row'
-        i = state['selectedRow']
-        j = state['selectedCol']
-
-        if action == 'Build cattle farm':
+        if actionSelected == 'Build cattle farm':
             newState['board'][i][j] = 2
             newState['wood'] -= 5
             newState['gold'] -= 5
             newState['food'] += 100
 
-        elif action == 'Burn down forest':
+        elif actionSelected == 'Burn down forest':
             if i == 9 and j == 9:
                 for x in range(10):
                     for y in range(10):
@@ -130,21 +148,21 @@ def takeAction(state, action):
                     newState['gg'] += 25
 
 
-        elif action == 'Build house':
+        elif actionSelected == 'Build house':
             newState['board'][i][j] = 5
             newState['gold'] -= 5 # capacity 1500, LQ decrease by 10 if no power, by 30 if full WIP
 
-        elif action == 'Cut down forest':
+        elif actionSelected == 'Cut down forest':
             newState['board'][i][j] = 1
             newState['wood'] += 5
             newState['gold'] -= 15
 
-        elif action == 'Mine coal':
+        elif actionSelected == 'Mine coal':
             newState['board'][i][j] = 3
             newState['gold'] -= 10
             newState['gg'] += 20
 
-        elif action == 'Build power plant':
+        elif actionSelected == 'Build power plant':
             newState['board'][i][j] = 4
             #pre-req mining one, can supply 3 house
 
@@ -225,9 +243,9 @@ INITIAL_STATE = {
                 'lq': 100,              # Living Quality
                 'temp': 0,              # Average Temperature
                 'board': board,         # Game Board
-                'nextInput': 'row',     # The next input that the user is making
+                'nextInput': 'action',  # The next input that the user is making
+                'selectedAction': '',   # Current action selected by the user
                 'selectedRow': 0,       # Current row selected by the user
-                'selectedCol': 0        # Current column selected by the user
                 }
 
 #</INITIAL_STATE>

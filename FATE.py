@@ -127,8 +127,15 @@ def takeAction(state, action):
             newState['board'][i][j] = 4
             #pre-req mining one, can supply 3 house
 
-
-
+##   for reference:
+##    0: Plants
+##    1: Empty Space
+##    2: Cattle Farm
+##    3: Coal Mine
+##    4: Power Plant
+##    5: House
+##    6: Ice
+##    7: Ocean
         for i in range(10):
             newState['gg'] += 15 * state['board'][i].count(4)
             newState['gg'] += 10 * state['board'][i].count(2)
@@ -205,28 +212,10 @@ INITIAL_STATE = {
 #</INITIAL_STATE>
 
 #<OPERATORS>
-actions = [
-            'Dummy operator', # This avoids the player to enter 0 for row 1, enters 1 for row 2, etc.
-            'Select row 1',
-            'Select row 2',
-            'Select row 3',
-            'Select row 4',
-            'Select row 5',
-            'Select row 6',
-            'Select row 7',
-            'Select row 8',
-            'Select row 9',
-            'Select row 10',
-            'Select column 1',
-            'Select column 2',
-            'Select column 3',
-            'Select column 4',
-            'Select column 5',
-            'Select column 6',
-            'Select column 7',
-            'Select column 8',
-            'Select column 9',
-            'Select column 10',
+# Dummy operator avoids the player to enter 0 for row 1, enters 1 for row 2, etc.
+actions = ['Dummy operator']+\
+          ['Select %s %d' %(string, i) for string in ['row', 'column'] for i in range(1, 11)] +\
+          [
             'Burn down forest',
             'Build cattle farm',
             'Mine coal',

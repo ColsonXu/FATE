@@ -186,12 +186,12 @@ INITIAL_STATE = {
 
 #<OPERATORS>
 actions = [
-            'Burn down forest', 
-            'Build cattle farm', 
-            'Build house', 
-            'Cut down forest', 
-            'Mine coal', 
+            'Burn down forest',
+            'Build cattle farm',
+            'Mine coal',
             'Build power plant'
+            'Build house',
+            'Cut down forest',
           ]
 
 OPERATORS = [Operator(

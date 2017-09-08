@@ -81,4 +81,14 @@ This operator turns the block where the player chooses and its adjacent blocks i
 <br>
 
 ### Goals and Scores
-There are two goal states players can achieve. The first one is that players make a perfect balance between civilization and their damage to the eco system. To be specific, after n terns (n >= 30) __'LQ'__ must be greater than 50, and __'Δ Temp.'__ should be less than 2C. This is extremely hard to achieve, due to frequent deforestation and constantly increasing population. Another possible goal state is that the environment is depleted to a state that is no longer suitable for living. The score is the round of games you play without dying.
+There are two goal states players can achieve. The first one is that players make a perfect balance between nature and nurture. To be specific, after __n__ terns (n >= 30) __'LQ'__ must be greater than 50, and __'Δ Temp.'__ should be less than 2C the __'Population'__ should reach a number of ___P___ (The actual value of P will change according to the value of n) This is extremely hard to achieve, due to frequent deforestation and constantly increasing population. Another possible goal state is that the environment has been depleted to a state that is no longer suitable for living.
+
+<br>
+
+### Specification of First Working Code
+Our first working code will have all the operators mentioned above.  `is_applicable()` test does not reflect the actual effect it should have since it returns _True_ in all conditions. Some of the algorithms are implemented to run in the background. Graphics is working right now, all of the operations can be reflected on the game board.
+
+<br>
+
+### Specification of Second Working code
+WE FLY

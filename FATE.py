@@ -252,16 +252,16 @@ INITIAL_STATE = {
 
 #<OPERATORS>
 # Dummy operator avoids the player to enter 0 for row 1, enters 1 for row 2, etc.
-actions = ['Dummy operator']+\
-          ['Select %s %d' %(string, i) for string in ['row', 'column'] for i in range(1, 11)] +\
-          [
+actions = [
             'Burn down forest',
+            'Cut down forest',
             'Build cattle farm',
             'Mine coal',
             'Build power plant',
-            'Build house',
-            'Cut down forest'
-          ]
+            'Build house'
+          ] + \
+          ['Dummy operator' for i in range(5)] + \
+          ['Select %s %d' %(string, i) for string in ['row', 'column'] for i in range(1, 11)]
 
 OPERATORS = [Operator(
     action,

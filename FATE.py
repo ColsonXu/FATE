@@ -44,9 +44,15 @@ def isActionAvailable(state, action):
 
 
 def takeAction(state, action):
+
     newState = copy_state(state)
-    j = int(input("Please enter row: ")) - 1
-    i = int(input("Please enter col: ")) - 1
+    while True:
+        try:
+            j = int(input("Please enter row: ")) - 1
+            i = int(input("Please enter col: ")) - 1
+            break
+        except:
+            print("You entered something invalid, please try again.")
 
     if action == 'Build cattle farm':
         newState['board'][i][j] = 2
@@ -134,10 +140,8 @@ class Operator:
         self.precond = precond
         self.state_transf = state_transf
 
-
     def is_applicable(self, s):
         return self.precond(s)
-
 
     def apply(self, s):
         return self.state_transf(s)
@@ -167,7 +171,7 @@ board.append([7, 7, 7, 7, 7, 7, 7, 7, 7, 6])
 INITIAL_STATE = {
                 'p': 100,               # Population
                 'gg': 0,                # Greenhouse Gas
-                'gold': 50,            # Gold
+                'gold': 50,             # Gold
                 'wood': 0,              # Wood
                 'food': 0,              # Food
                 'lq': 100,              # Living Quality

@@ -45,18 +45,14 @@ def isActionAvailable(state, action):
 
 def takeAction(state, action):
     newState = copy_state(state)
+    j = int(input("Please enter row: ")) - 1
+    i = int(input("Please enter col: ")) - 1
 
     if action == 'Build cattle farm':
-        j = int(input("Please enter row: ")) - 1
-        i = int(input("Please enter col: ")) - 1
-
         newState['board'][i][j] = 2
 
     elif action == 'Burn down forest':
-        j = int(input("Please enter row: ")) - 1
-        i = int(input("Please enter col: ")) - 1
-
-        if newState['board'][i][j] == 7:
+         if newState['board'][i][j] == 7:
             print('You cannot burn down ocean.')
         else:
             op_blocks = [[i, j]]
@@ -73,32 +69,25 @@ def takeAction(state, action):
                     if not (state['board'][block[0]][block[1]] == 6 or state['board'][block[0]][block[1]] == 7):
                         newState['board'][block[0]][block[1]] = 1
         
-
     elif action == 'Build house':
-        j = int(input("Please enter row: ")) - 1
-        i = int(input("Please enter col: ")) - 1
         newState['board'][i][j] = 5
 
     elif action == 'Cut down forest':
-        j = int(input("Please enter row: ")) - 1
-        i = int(input("Please enter col: ")) - 1
         newState['board'][i][j] = 1
 
     elif action == 'Mine coal':
-        j = int(input("Please enter row: ")) - 1
-        i = int(input("Please enter col: ")) - 1
         newState['board'][i][j] = 3
 
     elif action == 'Build power plant':
-        j = int(input("Please enter row: ")) - 1
-        i = int(input("Please enter col: ")) - 1
         newState['board'][i][j] = 4
 
     return newState
 
 
 def describe_state(s):
-    caption = "Polulation:", s['p'], "Gold:", s['gold'], "Wood:", s['wood'], "Food:", s['food'], "Living Quality:", s['lq'], "Temp.:", s['temp']
+    caption = "Polulation:", s['p'], "Gold:", s['gold'], \
+              "Wood:", s['wood'], "Food:", s['food'], "Living Quality:", \
+              s['lq'], "Temp.:", s['temp']
     return str(caption)
 
 

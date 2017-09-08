@@ -39,86 +39,103 @@ def copy_state(s):
 
 
 def isActionAvailable(state, action):
-    # WIP, temporarily returns True
-    return True
-
+    if state['nextInput'] == 'row':
+        if 'Select row' in action:
+            return True
+        return False
+    elif state['nextInput'] == 'col':
+        if 'Select column' in action:
+            return True
+        return False
+    elif state['nextInput'] == 'action':
+        if not 'Select' in action and action != 'Dummy operator':
+            return True
+        return False
 
 def takeAction(state, action):
-
     newState = copy_state(state)
-    while True:
-        try:
-            j = int(input("Please enter row: ")) - 1
-            i = int(input("Please enter col: ")) - 1
-            if 0 <= i <= 10 and 0 <= j <= 10:
-                break
-            else:
-                print("You have chosen a place beyound the world, please try again.")
-        except:
-            print("You entered something invalid, please try again.")
 
-    if action == 'Build cattle farm':
-        newState['board'][i][j] = 2
-        newState['wood'] -= 5
-        newState['gold'] -= 5
-        newState['food'] += 100 
-        
-    elif action == 'Burn down forest':
-        if i == 9 and j == 9:
-            for x in range(10):
-                for y in range(10):
-                    newState['board'][x][y] = 7
-
-        if newState['board'][i][j] == 7:
-            print('You cannot burn down ocean.')
+    if state['nextInput'] == 'row':
+        newState['nextInput'] = 'col'
+        rowSelected = int(action[-1])
+        if rowSelected == 0:
+            newState['selectedRow'] = 9
         else:
-            op_blocks = [[i, j]]
-            if i > 0:
-                op_blocks.append([i - 1, j])
-            if i < 9:
-                op_blocks.append([i + 1, j])
-            if j > 0:
-                op_blocks.append([i, j - 1])
-            if j < 9:
-                op_blocks.append([i, j + 1])
+            newState['selectedRow'] = rowSelected - 1
 
-            for block in op_blocks:
-                if not (state['board'][block[0]][block[1]] == 6 or \
-                        state['board'][block[0]][block[1]] == 7):
-                    newState['board'][block[0]][block[1]] = 1
-            for i in range(len(op_blocks)):
-                newState['gg'] += 25
-        
-        
-    elif action == 'Build house':
-        newState['board'][i][j] = 5
-        newState['gold'] -= 5 # capacity 1500, LQ decrease by 10 if no power, by 30 if full WIP
+    elif state['nextInput'] == 'col':
+        newState['nextInput'] = 'action'
+        colSelected = int(action[-1])
+        if colSelected == 0:
+            newState['selectedCol'] = 9
+        else:
+            newState['selectedCol'] = colSelected - 1
 
-    elif action == 'Cut down forest':
-        newState['board'][i][j] = 1
-        newState['wood'] += 5
-        newState['gold'] -= 15
+    elif state['nextInput'] == 'action':
+        newState['nextInput'] = 'row'
+        i = state['selectedRow']
+        j = state['selectedCol']
 
-    elif action == 'Mine coal':
-        newState['board'][i][j] = 3
-        newState['gold'] -= 10
-        newState['gg'] += 20
+        if action == 'Build cattle farm':
+            newState['board'][i][j] = 2
+            newState['wood'] -= 5
+            newState['gold'] -= 5
+            newState['food'] += 100
 
-    elif action == 'Build power plant':
-        newState['board'][i][j] = 4
-        #pre-req mining one, can supply 3 house
+        elif action == 'Burn down forest':
+            if i == 9 and j == 9:
+                for x in range(10):
+                    for y in range(10):
+                        newState['board'][x][y] = 7
 
-    
+            if newState['board'][i][j] == 7:
+                print('You cannot burn down ocean.')
+            else:
+                op_blocks = [[i, j]]
+                if i > 0:
+                    op_blocks.append([i - 1, j])
+                if i < 9:
+                    op_blocks.append([i + 1, j])
+                if j > 0:
+                    op_blocks.append([i, j - 1])
+                if j < 9:
+                    op_blocks.append([i, j + 1])
 
-    for i in range(10):
-        newState['gg'] += 15 * state['board'][i].count(4)
-        newState['gg'] += 10 * state['board'][i].count(2)
-        newState['gg'] -= 0.5 * state['board'][i].count(0)
-        newState['gold'] += 10 * state['board'][i].count(3)
-        #decrease of food in progress, 1 food for 5 people 
+                for block in op_blocks:
+                    if not (state['board'][block[0]][block[1]] == 6 or \
+                            state['board'][block[0]][block[1]] == 7):
+                        newState['board'][block[0]][block[1]] = 1
+                for i in range(len(op_blocks)):
+                    newState['gg'] += 25
 
+
+        elif action == 'Build house':
+            newState['board'][i][j] = 5
+            newState['gold'] -= 5 # capacity 1500, LQ decrease by 10 if no power, by 30 if full WIP
+
+        elif action == 'Cut down forest':
+            newState['board'][i][j] = 1
+            newState['wood'] += 5
+            newState['gold'] -= 15
+
+        elif action == 'Mine coal':
+            newState['board'][i][j] = 3
+            newState['gold'] -= 10
+            newState['gg'] += 20
+
+        elif action == 'Build power plant':
+            newState['board'][i][j] = 4
+            #pre-req mining one, can supply 3 house
+
+
+
+        for i in range(10):
+            newState['gg'] += 15 * state['board'][i].count(4)
+            newState['gg'] += 10 * state['board'][i].count(2)
+            newState['gg'] -= 0.5 * state['board'][i].count(0)
+            newState['gold'] += 10 * state['board'][i].count(3)
+            #decrease of food in progress, 1 food for 5 people
     return newState
-
 
 def describe_state(s):
     caption = "Polulation:", s['p'], "Gold:", s['gold'], \
@@ -179,18 +196,42 @@ INITIAL_STATE = {
                 'food': 0,              # Food
                 'lq': 100,              # Living Quality
                 'temp': 0,              # Average Temperature
-                'board': board          # Game Board
+                'board': board,         # Game Board
+                'nextInput': 'row',     # The next input that the user is making
+                'selectedRow': 0,       # Current row selected by the user
+                'selectedCol': 0        # Current column selected by the user
                 }
 
 #</INITIAL_STATE>
 
 #<OPERATORS>
 actions = [
-            'Burn down forest', 
-            'Build cattle farm', 
-            'Build house', 
-            'Cut down forest', 
-            'Mine coal', 
+            'Dummy operator', # This avoids the player to enter 0 for row 1, enters 1 for row 2, etc.
+            'Select row 1',
+            'Select row 2',
+            'Select row 3',
+            'Select row 4',
+            'Select row 5',
+            'Select row 6',
+            'Select row 7',
+            'Select row 8',
+            'Select row 9',
+            'Select row 10',
+            'Select column 1',
+            'Select column 2',
+            'Select column 3',
+            'Select column 4',
+            'Select column 5',
+            'Select column 6',
+            'Select column 7',
+            'Select column 8',
+            'Select column 9',
+            'Select column 10',
+            'Burn down forest',
+            'Build cattle farm',
+            'Build house',
+            'Cut down forest',
+            'Mine coal',
             'Build power plant'
           ]
 

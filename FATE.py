@@ -57,7 +57,7 @@ def takeAction(state, action):
     elif action == 'Burn down forest':
          if newState['board'][i][j] == 7:
             print('You cannot burn down ocean.')
-        else:
+         else:
             op_blocks = [[i, j]]
             if i > 0:
                 op_blocks.append([i - 1, j])
@@ -67,18 +67,17 @@ def takeAction(state, action):
                 op_blocks.append([i, j - 1])
             if j < 9:
                 op_blocks.append([i, j + 1])
-            if not dr_corner:
-                for block in op_blocks:
-                    if not (state['board'][block[0]][block[1]] == 6 or \
-                            state['board'][block[0]][block[1]] == 7):
-                        newState['board'][block[0]][block[1]] = 1
-            for 0 in range(len(op_blocks)):
+            for block in op_blocks:
+                if not (state['board'][block[0]][block[1]] == 6 or \
+                        state['board'][block[0]][block[1]] == 7):
+                    newState['board'][block[0]][block[1]] = 1
+            for i in range(len(op_blocks)):
                 newState['gg'] += 25
         
         
     elif action == 'Build house':
         newState['board'][i][j] = 5
-        newState['gold'] -= 5#capacity1500, LQ decrease by 10 if no power, by 30 if full WIP
+        newState['gold'] -= 5#capacity1500, LQ decrease by 10 if no power, by 30 if full ,WIP
 
     elif action == 'Cut down forest':
         newState['board'][i][j] = 1
@@ -93,6 +92,8 @@ def takeAction(state, action):
     elif action == 'Build power plant':
         newState['board'][i][j] = 4
         #pre-req mining one, can supply 3 house
+
+    
 
     for i in range(10):
         newState['gg'] += 15 * state['board'][i].count(4)

@@ -62,7 +62,7 @@ def takeAction(state, action):
 
         if newState['board'][i][j] == 7:
             print('You cannot burn down ocean.')
-        else:
+         else:
             op_blocks = [[i, j]]
             if i > 0:
                 op_blocks.append([i - 1, j])
@@ -74,9 +74,10 @@ def takeAction(state, action):
                 op_blocks.append([i, j + 1])
 
             for block in op_blocks:
-                if not (state['board'][block[0]][block[1]] == 6 or state['board'][block[0]][block[1]] == 7):
+                if not (state['board'][block[0]][block[1]] == 6 or \
+                        state['board'][block[0]][block[1]] == 7):
                     newState['board'][block[0]][block[1]] = 1
-            for x in range(len(op_blocks)):
+            for i in range(len(op_blocks)):
                 newState['gg'] += 25
         
         
@@ -97,6 +98,8 @@ def takeAction(state, action):
     elif action == 'Build power plant':
         newState['board'][i][j] = 4
         #pre-req mining one, can supply 3 house
+
+    
 
     for i in range(10):
         newState['gg'] += 15 * state['board'][i].count(4)

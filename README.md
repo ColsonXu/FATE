@@ -102,4 +102,4 @@ Our first working code will have all the operators mentioned above.  `is_applica
 <br>
 
 ### Specification of Second Working code
-By Tuesday, we will be switched from dictionary to object for the state representation.
+By Tuesday, we will be switched from dictionary to object for the state representation. Hopefully we will have the mouse input working and add a `switch_mode` mechanism to determine whether the player is a computer agent or a human.

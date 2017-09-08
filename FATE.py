@@ -43,115 +43,64 @@ def isActionAvailable(state, action):
     return True
 
 
-def takeAction(state, action):
+def takeAction(state, action):#-0.5gg per squre of forest per state
     newState = copy_state(state)
+    j = int(input("Please enter row: ")) - 1
+    i = int(input("Please enter col: ")) - 1
 
     if action == 'Build cattle farm':
-        j = int(input("Please enter row: ")) - 1
-        i = int(input("Please enter col: ")) - 1
-
         newState['board'][i][j] = 2
-
+        state['wood'] -= 5
+        state['gold'] -= 5
+        state['food'] += 100 #10gg per state WIP
+        
     elif action == 'Burn down forest':
-        j = int(input("Please enter row: ")) - 1
-        i = int(input("Please enter col: ")) - 1
-
-        left_edge = i == 0 and (not j == 0) and (not j == 9)
-        right_edge = i == 9 and (not j == 0) and (not j == 9)
-        up_edge = j == 0 and (not i == 0) and (not i == 9)
-        low_edge = j == 9 and (not i == 0) and (not i == 9)
-        ul_corner = i == 0 and j == 0
-        ur_corner = i == 9 and j == 0
-        dl_corner = i == 0 and j == 9
-        dr_corner = i == 9 and j == 9
-
-        if newState['board'][i][j] == 7:
+         if newState['board'][i][j] == 7:
             print('You cannot burn down ocean.')
         else:
-            newState['board'][i][j] = 1
-
-            if left_edge:
-                op_blocks = [
-                [i + 1, j],
-                [i, j - 1],
-                [i, j + 1]
-                ]
-            elif right_edge:
-                op_blocks = [
-                [i - 1, j],
-                [i, j - 1],
-                [i, j + 1]
-                ]
-            elif up_edge:
-                op_blocks = [
-                [i - 1, j],
-                [i + 1, j],
-                [i, j + 1]
-                ]
-            elif low_edge:
-                op_blocks = [
-                [i - 1, j],
-                [i + 1, j],
-                [i, j - 1]
-                ]
-            elif ul_corner:
-                op_blocks = [
-                [i + 1, j],
-                [i, j + 1]
-                ]
-            elif ur_corner:
-                op_blocks = [
-                [i - 1][j],
-                [i][j + 1]
-                ]
-            elif dl_corner:
-                op_blocks = [
-                [i + 1, j],
-                [i, j - 1]
-                ]
-            elif dr_corner:
-                for i in range(10):
-                    for j in range(10):
-                        newState['board'][i][j] = 7
-            elif not (left_edge or right_edge or up_edge or low_edge):
-                op_blocks = [
-                [i - 1, j],
-                [i + 1, j],
-                [i, j - 1],
-                [i, j + 1]
-                ]
-            
+            op_blocks = [[i, j]]
+            if i > 0:
+                op_blocks.append([i - 1, j])
+            if i < 9:
+                op_blocks.append([i + 1, j])
+            if j > 0:
+                op_blocks.append([i, j - 1])
+            if j < 9:
+                op_blocks.append([i, j + 1])
             if not dr_corner:
                 for block in op_blocks:
-                    if not (state['board'][block[0]][block[1]] == 6 or state['board'][block[0]][block[1]] == 7):
+                    if not (state['board'][block[0]][block[1]] == 6 or \
+                            state['board'][block[0]][block[1]] == 7):
                         newState['board'][block[0]][block[1]] = 1
+            for 0 in range(len(op_blocks)):
+                state['gg'] += 25
         
-
+        
     elif action == 'Build house':
-        j = int(input("Please enter row: ")) - 1
-        i = int(input("Please enter col: ")) - 1
         newState['board'][i][j] = 5
+        state['gold'] -= 5#capacity1500, LQ decrease by 10 if no power, by 30 if full WIP
 
     elif action == 'Cut down forest':
-        j = int(input("Please enter row: ")) - 1
-        i = int(input("Please enter col: ")) - 1
         newState['board'][i][j] = 1
+        state['wood'] += 5
+        state['gold'] -= 15
 
     elif action == 'Mine coal':
-        j = int(input("Please enter row: ")) - 1
-        i = int(input("Please enter col: ")) - 1
         newState['board'][i][j] = 3
+        state['gold'] -= 10# each state gold += 10 WIP
+        state['gg'] += 20
 
     elif action == 'Build power plant':
-        j = int(input("Please enter row: ")) - 1
-        i = int(input("Please enter col: ")) - 1
         newState['board'][i][j] = 4
+        #seach state  gg += 15, pre-req mining one, can supply 3 house
 
     return newState
 
 
 def describe_state(s):
-    caption = "Polulation:", s['p'], "Gold:", s['gold'], "Wood:", s['wood'], "Food:", s['food'], "Living Quality:", s['lq'], "Temp.:", s['temp']
+    caption = "Polulation:", s['p'], "Gold:", s['gold'], \
+              "Wood:", s['wood'], "Food:", s['food'], "Living Quality:", \
+              s['lq'], "Temp.:", s['temp']
     return str(caption)
 
 
@@ -204,7 +153,7 @@ board.append([7, 7, 7, 7, 7, 7, 7, 7, 7, 6])
 INITIAL_STATE = {
                 'p': 100,               # Population
                 'gg': 0,                # Greenhouse Gas
-                'gold': 200,            # Gold
+                'gold': 50,            # Gold
                 'wood': 0,              # Wood
                 'food': 0,              # Food
                 'lq': 100,              # Living Quality

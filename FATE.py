@@ -43,14 +43,17 @@ def isActionAvailable(state, action):
     return True
 
 
-def takeAction(state, action):
+def takeAction(state, action):#-0.5gg per squre of forest per state
     newState = copy_state(state)
     j = int(input("Please enter row: ")) - 1
     i = int(input("Please enter col: ")) - 1
 
     if action == 'Build cattle farm':
         newState['board'][i][j] = 2
-
+        state['wood'] -= 5
+        state['gold'] -= 5
+        state['food'] += 100 #10gg per state WIP
+        
     elif action == 'Burn down forest':
          if newState['board'][i][j] == 7:
             print('You cannot burn down ocean.')
@@ -66,20 +69,30 @@ def takeAction(state, action):
                 op_blocks.append([i, j + 1])
             if not dr_corner:
                 for block in op_blocks:
-                    if not (state['board'][block[0]][block[1]] == 6 or state['board'][block[0]][block[1]] == 7):
+                    if not (state['board'][block[0]][block[1]] == 6 or \
+                            state['board'][block[0]][block[1]] == 7):
                         newState['board'][block[0]][block[1]] = 1
+            for 0 in range(len(op_blocks)):
+                state['gg'] += 25
+        
         
     elif action == 'Build house':
         newState['board'][i][j] = 5
+        state['gold'] -= 5#capacity1500, LQ decrease by 10 if no power, by 30 if full WIP
 
     elif action == 'Cut down forest':
         newState['board'][i][j] = 1
+        state['wood'] += 5
+        state['gold'] -= 15
 
     elif action == 'Mine coal':
         newState['board'][i][j] = 3
+        state['gold'] -= 10# each state gold += 10 WIP
+        state['gg'] += 20
 
     elif action == 'Build power plant':
         newState['board'][i][j] = 4
+        #seach state  gg += 15, pre-req mining one, can supply 3 house
 
     return newState
 
@@ -140,7 +153,7 @@ board.append([7, 7, 7, 7, 7, 7, 7, 7, 7, 6])
 INITIAL_STATE = {
                 'p': 100,               # Population
                 'gg': 0,                # Greenhouse Gas
-                'gold': 200,            # Gold
+                'gold': 50,            # Gold
                 'wood': 0,              # Wood
                 'food': 0,              # Food
                 'lq': 100,              # Living Quality

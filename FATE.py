@@ -141,7 +141,10 @@ def takeAction(state, action):
             newState['gg'] += 10 * state['board'][i].count(2)
             newState['gg'] -= 0.5 * state['board'][i].count(0)
             newState['gold'] += 10 * state['board'][i].count(3)
+            
             #decrease of food in progress, 1 food for 5 people
+        newState['temp'] = 0.05 * newState['gg']
+            
     return newState
 
 def describe_state(s):

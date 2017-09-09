@@ -37,20 +37,48 @@ PROBLEM_DESC=\
 states.'''
 MUTABLE_STATES = [0, 1, 3]
 
+'''
+    Makes a deep copy of a Game_state instance.
+
+    :param Game_state s: The source that is being copied.
+
+    :return Game_state: The copied Game_state instance.
+'''
 def copy_state(s):
     return s.__copy__()
 
 class Game_state:
+    '''
+        Game_state constructor.
+
+        :param dict state: Initial state of the new Game_state instance.
+    '''
     def __init__(self, state):
         self.state = state
 
+    '''
+        Makes any instance created from this class callable.
+
+        :return dict: The dictionary storing current state.
+    '''
     def __call__(self):
         return self.state
 
+    '''
+        Makes a deep copy of the current instance.
+
+        :return Game_state: The copied Game_state instance.
+    '''
     def __copy__(self):
         newState = copy.deepcopy(self)
         return newState
 
+    '''
+        Returns a caption which represents some information about the current
+        state.
+
+        :return str: The caption representing the current state.
+    '''
     def __str__(self):
         caption = "Polulation:", self()['p'], "Gold:", self()['gold'], \
                   "Wood:", self()['wood'], "Food:", self()['food'], \
@@ -58,6 +86,13 @@ class Game_state:
                   self()['temp']
         return str(caption)
 
+    '''
+        Compares two states and returns whether they are identical.
+
+        :param Game_state other: The other state being compared.
+
+        :return bool
+    '''
     def __eq__(self, other):
         if self is other:
             return True
@@ -71,6 +106,13 @@ class Game_state:
     def __hash__(self):
         return (str(self)).hash()
 
+    '''
+        Evaluates whether an operator is legal under the current state.
+
+        :param str action: The operator evaluated.
+
+        :return bool
+    '''
     def isActionAvailable(self, action):
         if self()['nextInput'] == 'action':
             '''Filtrates all operators that are not a row/column selection operator
@@ -132,6 +174,13 @@ class Game_state:
                             return True
         return False
 
+    '''
+        Executes an operator.
+
+        :param str action: The operator executed.
+
+        :return Game_state: A new game state produced by the action.
+    '''
     def takeAction(self, action):
         newState = self.__copy__()
 
@@ -225,12 +274,27 @@ class Game_state:
                 #decrease of food in progress, 1 food for 5 people
         return newState
 
+'''
+    Tests whether the player achieves the final goal:
+    - Temperature risen should be less than 2 degrees Celsius
+    - Living quality level should be greater than 60
+    - Population should be more than 4500
+
+    :param Game_state state: The game state evaluated.
+
+    :return bool
+'''
 def goal_test(state):
     s = state()
     if s['temp'] < 2 and s['lq'] > 60 and s['p'] > 4500:
         return True
     return False
 
+'''
+    :param mixed s
+
+    :return str
+'''
 def goal_message(s):
     return "Wow, you achieved the impossible!"
 

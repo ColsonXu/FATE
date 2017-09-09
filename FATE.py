@@ -38,7 +38,7 @@ states.'''
 MUTABLE_STATES = [0, 1, 3]
 
 def copy_state(s):
-    return s
+    return s.__copy__()
 
 class Game_state:
     def __init__(self, state):
@@ -48,7 +48,7 @@ class Game_state:
         return self.state
 
     def __copy__(self):
-        newState = Game_state(self.state)
+        newState = copy.deepcopy(self)
         return newState
 
     def isActionAvailable(self, action):

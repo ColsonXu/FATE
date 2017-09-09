@@ -38,32 +38,69 @@ states.'''
 MUTABLE_STATES = [0, 1, 3]
 
 def copy_state(s):
-    return copy.deepcopy(s)
+    return s
 
+class Game_state:
+    def __init__(self, state):
+        self.state = state
 
-def isActionAvailable(state, action):
-    if state['nextInput'] == 'action':
-        '''Filtrates all operators that are not a row/column selection operator
-        or a dummy operator.'''
-        if not 'Select' in action and action != 'Dummy operator':
-            return True
-        return False
-    elif state['nextInput'] == 'row':
-        '''Filtrates all operators that are a row selection operator.'''
-        if 'Select row' in action:
-            actionSelected = state['selectedAction']
-            '''Converts row selection to index of the list for the board.'''
-            row = int(action[-1])
-            if row == 0:
-                i = 9
-            else:
-                i = row - 1
-            '''Loops through all blocks in the row and sees if there is any
-            block where the action selected is applicable.'''
-            for j in range(10):
-                blockState = state['board'][i][j]
+    def __call__(self):
+        return self.state
+
+    def __copy__(self):
+        newState = Game_state(self.state)
+        return newState
+
+    def isActionAvailable(self, action):
+        if self.state['nextInput'] == 'action':
+            '''Filtrates all operators that are not a row/column selection operator
+            or a dummy operator.'''
+            if not 'Select' in action and action != 'Dummy operator':
+                return True
+            return False
+        elif self.state['nextInput'] == 'row':
+            '''Filtrates all operators that are a row selection operator.'''
+            if 'Select row' in action:
+                actionSelected = self.state['selectedAction']
+                '''Converts row selection to index of the list for the board.'''
+                row = int(action[-1])
+                if row == 0:
+                    i = 9
+                else:
+                    i = row - 1
+                '''Loops through all blocks in the row and sees if there is any
+                block where the action selected is applicable.'''
+                for j in range(10):
+                    blockState = self.state['board'][i][j]
+                    if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
+                        blockState = self.state['board'][i][j]
+                        if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
+                            if blockState == 0 and actionSelected in \
+                            ['Burn down forest', 'Cut down forest']:
+                                return True
+                            elif blockState == 1 and actionSelected in \
+                            ['Build cattle farm', 'Mine coal', 'Build house']:
+                                return True
+                            elif blockState == 3 and actionSelected == 'Build power plant':
+                                return True
+            return False
+        elif self.state['nextInput'] == 'col':
+            '''Filtrates all operators that are a column selection operator.'''
+            if 'Select column' in action:
+                actionSelected = self.state['selectedAction']
+                i = self.state['selectedRow']
+                '''Converts column selection to index of the second-level list for
+                the board.'''
+                col = int(action[-1])
+                if col == 0:
+                    j = 9
+                else:
+                    j = col - 1
+                blockState = self.state['board'][i][j]
+                '''Evaluates all blocks in the row selected and sees if there is any
+                block where the action selected is applicable.'''
                 if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
-                    blockState = state['board'][i][j]
+                    blockState = self.state['board'][i][j]
                     if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
                         if blockState == 0 and actionSelected in \
                         ['Burn down forest', 'Cut down forest']:
@@ -74,135 +111,109 @@ def isActionAvailable(state, action):
                         elif blockState == 3 and actionSelected == 'Build power plant':
                             return True
         return False
-    elif state['nextInput'] == 'col':
-        '''Filtrates all operators that are a column selection operator.'''
-        if 'Select column' in action:
-            actionSelected = state['selectedAction']
-            i = state['selectedRow']
+
+    def takeAction(self, action):
+        newState = self.__copy__()
+
+        '''After the player selects an operator, FATE will change the pointer
+        storing type of the next input the player is going to make, `nextInput`, to
+        the next value it ought to have.
+        The order of entering those operators are action, row, and column.'''
+
+        if self.state['nextInput'] == 'action':
+            newState.state['nextInput'] = 'row'
+            newState.state['selectedAction'] = action
+
+        elif self.state['nextInput'] == 'row':
+            newState.state['nextInput'] = 'col'
+            '''Converts row selection to index of the list for the board.'''
+            rowSelected = int(action[-1])
+            if rowSelected == 0:
+                newState.state['selectedRow'] = 9
+            else:
+                newState.state['selectedRow'] = rowSelected - 1
+
+        elif self.state['nextInput'] == 'col':
+            newState.state['nextInput'] = 'action'
+            actionSelected = self.state['selectedAction']
+            i = self.state['selectedRow']
             '''Converts column selection to index of the second-level list for
             the board.'''
-            col = int(action[-1])
-            if col == 0:
+            colSelected = int(action[-1])
+            if colSelected == 0:
                 j = 9
             else:
-                j = col - 1
-            blockState = state['board'][i][j]
-            '''Evaluates all blocks in the row selected and sees if there is any
-            block where the action selected is applicable.'''
-            if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
-                blockState = state['board'][i][j]
-                if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
-                    if blockState == 0 and actionSelected in \
-                    ['Burn down forest', 'Cut down forest']:
-                        return True
-                    elif blockState == 1 and actionSelected in \
-                    ['Build cattle farm', 'Mine coal', 'Build house']:
-                        return True
-                    elif blockState == 3 and actionSelected == 'Build power plant':
-                        return True
-        return False
+                j = colSelected - 1
+
+            '''Changes self.state of the block where the player chooses.'''
+            if actionSelected == 'Build cattle farm':
+                newState.state['board'][i][j] = 2
+                newState.state['wood'] -= 5
+                newState.state['gold'] -= 5
+                newState.state['food'] += 100
+
+            elif actionSelected == 'Burn down forest':
+                if i == 9 and j == 9:
+                    for x in range(10):
+                        for y in range(10):
+                            newState.state['board'][x][y] = 7
+
+                if newState.state['board'][i][j] == 7:
+                    print('You cannot burn down ocean.')
+                else:
+                    op_blocks = [[i, j]]
+                    if i > 0:
+                        op_blocks.append([i - 1, j])
+                    if i < 9:
+                        op_blocks.append([i + 1, j])
+                    if j > 0:
+                        op_blocks.append([i, j - 1])
+                    if j < 9:
+                        op_blocks.append([i, j + 1])
+
+                    for block in op_blocks:
+                        if not (self.state['board'][block[0]][block[1]] == 6 or \
+                                self.state['board'][block[0]][block[1]] == 7):
+                            newState.state['board'][block[0]][block[1]] = 1
+                    for i in range(len(op_blocks)):
+                        newState.state['gg'] += 25
 
 
-def takeAction(state, action):
-    newState = copy_state(state)
+            elif actionSelected == 'Build house':
+                newState.state['board'][i][j] = 5
+                newState.state['gold'] -= 5 # capacity 1500, LQ decrease by 10 if no power, by 30 if full WIP
 
-    '''After the player selects an operator, FATE will change the pointer
-    storing type of the next input the player is going to make, `nextInput`, to
-    the next value it ought to have.
-    The order of entering those operators are action, row, and column.'''
+            elif actionSelected == 'Cut down forest':
+                newState.state['board'][i][j] = 1
+                newState.state['wood'] += 5
+                newState.state['gold'] -= 15
 
-    if state['nextInput'] == 'action':
-        newState['nextInput'] = 'row'
-        newState['selectedAction'] = action
+            elif actionSelected == 'Mine coal':
+                newState.state['board'][i][j] = 3
+                newState.state['gold'] -= 10
+                newState.state['gg'] += 20
 
-    elif state['nextInput'] == 'row':
-        newState['nextInput'] = 'col'
-        '''Converts row selection to index of the list for the board.'''
-        rowSelected = int(action[-1])
-        if rowSelected == 0:
-            newState['selectedRow'] = 9
-        else:
-            newState['selectedRow'] = rowSelected - 1
+            elif actionSelected == 'Build power plant':
+                newState.state['board'][i][j] = 4
+                #pre-req mining one, can supply 3 house
 
-    elif state['nextInput'] == 'col':
-        newState['nextInput'] = 'action'
-        actionSelected = state['selectedAction']
-        i = state['selectedRow']
-        '''Converts column selection to index of the second-level list for
-        the board.'''
-        colSelected = int(action[-1])
-        if colSelected == 0:
-            j = 9
-        else:
-            j = colSelected - 1
+            for i in range(10):
+                newState.state['gg'] += 15 * self.state['board'][i].count(4)
+                newState.state['gg'] += 10 * self.state['board'][i].count(2)
+                newState.state['gg'] -= 0.5 * self.state['board'][i].count(0)
+                newState.state['gold'] += 10 * self.state['board'][i].count(3)
+                #decrease of food in progress, 1 food for 5 people
+        return newState
 
-        '''Changes state of the block where the player chooses.'''
-        if actionSelected == 'Build cattle farm':
-            newState['board'][i][j] = 2
-            newState['wood'] -= 5
-            newState['gold'] -= 5
-            newState['food'] += 100
-
-        elif actionSelected == 'Burn down forest':
-            if i == 9 and j == 9:
-                for x in range(10):
-                    for y in range(10):
-                        newState['board'][x][y] = 7
-
-            if newState['board'][i][j] == 7:
-                print('You cannot burn down ocean.')
-            else:
-                op_blocks = [[i, j]]
-                if i > 0:
-                    op_blocks.append([i - 1, j])
-                if i < 9:
-                    op_blocks.append([i + 1, j])
-                if j > 0:
-                    op_blocks.append([i, j - 1])
-                if j < 9:
-                    op_blocks.append([i, j + 1])
-
-                for block in op_blocks:
-                    if not (state['board'][block[0]][block[1]] == 6 or \
-                            state['board'][block[0]][block[1]] == 7):
-                        newState['board'][block[0]][block[1]] = 1
-                for i in range(len(op_blocks)):
-                    newState['gg'] += 25
-
-
-        elif actionSelected == 'Build house':
-            newState['board'][i][j] = 5
-            newState['gold'] -= 5 # capacity 1500, LQ decrease by 10 if no power, by 30 if full WIP
-
-        elif actionSelected == 'Cut down forest':
-            newState['board'][i][j] = 1
-            newState['wood'] += 5
-            newState['gold'] -= 15
-
-        elif actionSelected == 'Mine coal':
-            newState['board'][i][j] = 3
-            newState['gold'] -= 10
-            newState['gg'] += 20
-
-        elif actionSelected == 'Build power plant':
-            newState['board'][i][j] = 4
-            #pre-req mining one, can supply 3 house
-
-        for i in range(10):
-            newState['gg'] += 15 * state['board'][i].count(4)
-            newState['gg'] += 10 * state['board'][i].count(2)
-            newState['gg'] -= 0.5 * state['board'][i].count(0)
-            newState['gold'] += 10 * state['board'][i].count(3)
-            #decrease of food in progress, 1 food for 5 people
-    return newState
-
-def describe_state(s):
+def describe_state(state):
+    s = state.state
     caption = "Polulation:", s['p'], "Gold:", s['gold'], \
               "Wood:", s['wood'], "Food:", s['food'], "Living Quality:", \
               s['lq'], "ΔTemp.:", s['temp']
     return str(caption)
 
-def goal_test(s):
+def goal_test(state):
+    s = state.state
     if s['temp'] < 2 and s['lq'] > 60 and s['p'] > 4500:
         return True
     return False
@@ -245,7 +256,7 @@ row = [0] * 10
 board = [row[:] for i in range(9)]
 board.append([7, 7, 7, 7, 7, 7, 7, 7, 7, 6])
 
-INITIAL_STATE = {
+initialState = {
                 'p': 100,               # Population
                 'gg': 0,                # Greenhouse Gas
                 'gold': 50,             # Gold
@@ -258,6 +269,8 @@ INITIAL_STATE = {
                 'selectedAction': '',   # Current action selected by the user
                 'selectedRow': 0,       # Current row selected by the user
                 }
+
+INITIAL_STATE = Game_state(initialState)
 
 #</INITIAL_STATE>
 
@@ -277,8 +290,8 @@ selection process can be more user-friendly.'''
 
 OPERATORS = [Operator(
     action,
-    lambda state, action1 = action: isActionAvailable(state, action1),
-    lambda state, action1 = action: takeAction(state, action1))
+    lambda state, action1 = action: state.isActionAvailable(action1),
+    lambda state, action1 = action: state.takeAction(action1))
     for action in actions]
 #</OPERATORS>
 

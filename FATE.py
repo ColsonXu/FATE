@@ -165,7 +165,7 @@ class Game_state:
             else:
                 j = colSelected - 1
 
-            '''Changes self() of the block where the player chooses.'''
+            '''Changes state of the block where the player chooses.'''
             if actionSelected == 'Build cattle farm':
                 newState()['board'][i][j] = 2
                 newState()['wood'] -= 5

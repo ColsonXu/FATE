@@ -51,6 +51,26 @@ class Game_state:
         newState = copy.deepcopy(self)
         return newState
 
+    def __str__(self):
+        caption = "Polulation:", self.state['p'], "Gold:", self.state['gold'], \
+                  "Wood:", self.state['wood'], "Food:", self.state['food'], \
+                  "Living Quality:", self.state['lq'], "ΔTemp.:", \
+                  self.state['temp']
+        return str(caption)
+
+    def __eq__(self, other):
+        if self is other:
+            return True
+        elif self is None:
+            return False
+        elif other is None:
+            return False
+        else:
+            return True
+
+    def __hash__(self):
+        return (str(self)).hash()
+
     def isActionAvailable(self, action):
         if self.state['nextInput'] == 'action':
             '''Filtrates all operators that are not a row/column selection operator
@@ -205,13 +225,6 @@ class Game_state:
                 #decrease of food in progress, 1 food for 5 people
         return newState
 
-def describe_state(state):
-    s = state.state
-    caption = "Polulation:", s['p'], "Gold:", s['gold'], \
-              "Wood:", s['wood'], "Food:", s['food'], "Living Quality:", \
-              s['lq'], "ΔTemp.:", s['temp']
-    return str(caption)
-
 def goal_test(state):
     s = state.state
     if s['temp'] < 2 and s['lq'] > 60 and s['p'] > 4500:
@@ -220,7 +233,6 @@ def goal_test(state):
 
 def goal_message(s):
     return "Wow, you achieved the impossible!"
-
 
 class Operator:
     def __init__(self, name, precond, state_transf):

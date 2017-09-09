@@ -73,7 +73,7 @@ def render_state(s):
 
 
 
-    caption = "Current state of the puzzle. Textual version: " + FATE.describe_state(s)
+    caption = "Current state of the puzzle. Textual version: " + str(s)
     the_state_array = state_array(color_array = the_color_array,
                                   string_array = the_string_array,
                                   text_font = myFont,

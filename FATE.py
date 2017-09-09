@@ -209,8 +209,8 @@ class Game_state:
                 newState()['nextInput'] = 'action'
                 while True:
                     try:
-                        j = int(input('Enter the row: >> ')) - 1
-                        i = int(input('Enter the column: >> ')) - 1
+                        i = int(input('Enter the row: >> ')) - 1
+                        j = int(input('Enter the column: >> ')) - 1
                         if 0 < i < 11 and 0 < j < 11:
                             newState = self.changeGrid(i, j, action)
                             break

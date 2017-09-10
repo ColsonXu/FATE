@@ -360,13 +360,9 @@ class Operator:
     7: Ocean
     '''
 
-row = [7, 0, 0, 0, 0, 0, 0, 0, 0, 7]
-board = [row[:] for i in range(10)]
-board[0] = ([7, 7, 7, 6, 6, 6, 6, 7, 7, 7])
-board[2] = ([7, 0, 0, 0, 6, 7, 7, 0, 0, 7])
-board[3] = ([7, 0, 0, 0, 0, 0, 0, 7, 0, 7])
-board[4] = ([7, 0, 0, 0, 0, 0, 0, 0, 7, 7])
-board[9] = ([7, 7, 7, 6, 6, 6, 6, 7, 7, 7])
+row = [0] * 10
+board = [row[:] for i in range(9)]
+board.append([7, 7, 7, 7, 7, 7, 7, 7, 7, 6])
 
 initialState = {
                 'p': 100,               # Population

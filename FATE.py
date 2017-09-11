@@ -277,7 +277,7 @@ class Game_state:
             if newState.board[i][j] == 1 and newState.gold >= 5 and electricity == True:
                 newState.board[i][j] = 5
                 newState.gold -= 5 # capacity 1500, if full, LQ decrease 30 food and temp influence LQ
-            else:
+            elif electricity == True:
                 print ("The space is not available or you don't have enough money")
                 apply = False
         elif actionSelected == 'Cut down forest':
@@ -315,7 +315,7 @@ class Game_state:
                 newState.board[i][j] = 4
                 newState.wood -= 5
                 newState.gold -= 15
-            else:
+            elif mine == True:
                 print ("You need 15 gold and 5 wood to build a powerplant. And you can only build on empty space.")
                 apply = False
 

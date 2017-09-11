@@ -230,7 +230,7 @@ class Game_state:
                     try:
                         i = int(input('Enter the row: >> ')) - 1
                         j = int(input('Enter the column: >> ')) - 1
-                        if 0 <= i < 11 and 0 <= j < 11:
+                        if 0 <= i < 10 and 0 <= j < 10:
                             newState = self.changeGrid(i, j, action)
                             break
                         else:

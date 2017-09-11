@@ -52,7 +52,7 @@ def copy_state(s):
 def describe_state(stateObject):
     return str(stateObject)
 
-def op_blocks(i, j):
+def op_blocks(i, j, state):
     blocks = [[i, j]]
     if i > 0:
         blocks.append([i - 1, j])
@@ -62,6 +62,9 @@ def op_blocks(i, j):
         blocks.append([i, j - 1])
     if j < 9:
         blocks.append([i, j + 1])
+    for block in blocks:
+        if state.board[block[0]][block[1]] != 0:
+            del blocks[blocks.index(block)]
     return blocks
 
 class Game_state:
@@ -289,11 +292,11 @@ class Game_state:
                 if newState.board[i][j] == 7:
                     print('You cannot burn down ocean.')
                 else:
-                    for block in op_blocks(i, j):
+                    for block in op_blocks(i, j, self):
                         if not (self.board[block[0]][block[1]] == 6 or \
                                 self.board[block[0]][block[1]] == 7):
                             newState.board[block[0]][block[1]] = 1
-                    for i in range(len(op_blocks(i, j))):
+                    for i in range(len(op_blocks(i, j, self))):
                         newState.gg += 25
             else:
                 print('You can only burn down forest')
@@ -353,6 +356,8 @@ class Game_state:
                 mine = False
             if newState.wood >= 5 and newState.gold >= 15 and newState.board[i][j] == 1 and mine == True:
                 newState.board[i][j] = 4
+                newState.wood -= 5
+                newState.gold -= 15
             else:
                 print ("You need 15 gold and 5 wood to build a powerplant. And you can only build on empty space.")
                 apply = False
@@ -367,7 +372,7 @@ class Game_state:
                     i = randint(0, 9)
                     j = randint(0, 9)
                     if self.board[i][j] == 0:
-                        for block in op_blocks(i, j):
+                        for block in op_blocks(i, j, self):
                             newState.board[block[0]][block[1]] = 1
                 print('Due to high temperture, forest fire happened at row %d, column %d, and burned down near blocks.'\
                       %(i + 1, j + 1))

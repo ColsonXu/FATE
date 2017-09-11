@@ -196,7 +196,7 @@ class Game_state:
                             return True
                         elif blockState == 3 and actionSelected == 'Build power plant':
                             return True
-        return False
+            return False
 
     '''
         Executes an operator.
@@ -236,7 +236,7 @@ class Game_state:
                         else:
                             print('Your input is out of the range. Please try again.')
                     except Exception as e:
-                        print (e)
+                        print(e)
                         print('Invalid input. Please try again.')
 
         elif self.nextInput == 'row':
@@ -285,7 +285,7 @@ class Game_state:
                     for x in range(10):
                         for y in range(10):
                             newState.board[x][y] = 7
-                
+
                 if newState.board[i][j] == 7:
                     print('You cannot burn down ocean.')
                 else:

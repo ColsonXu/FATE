@@ -214,7 +214,7 @@ class Game_state:
                     try:
                         i = int(input('Enter the row: >> ')) - 1
                         j = int(input('Enter the column: >> ')) - 1
-                        if 0 < i < 11 and 0 < j < 11:
+                        if 0 <= i < 11 and 0 <= j < 11:
                             newState = self.changeGrid(i, j, action)
                             break
                         else:
@@ -251,55 +251,91 @@ class Game_state:
 
         '''Changes state of the block where the player chooses.'''
         if actionSelected == 'Build cattle farm':
-            newState.board[i][j] = 2
-            newState.wood -= 5
-            newState.gold -= 5
-            newState.food += 100
+            if newState.wood >= 5 and newState.gold >= 5 and newState.board[i][j] == 1:
+                newState.board[i][j] = 2
+                newState.wood -= 5
+                newState.gold -= 5
+                newState.food += 100
+            else: print ("You don't have 5 wood and 5 gold or the selected square is not empty")
 
         elif actionSelected == 'Burn down forest':
-            if i == 9 and j == 9:
-                for x in range(10):
-                    for y in range(10):
-                        newState.board[x][y] = 7
+            '''if you burn the glacial, all board turns to water. just for fun'''
+            if newState.board[i][j] == 0:
+                if i == 9 and j == 9:
+                    for x in range(10):
+                        for y in range(10):
+                            newState.board[x][y] = 7
+                
+                if newState.board[i][j] == 7:
+                    print('You cannot burn down ocean.')
+                else:
+                    op_blocks = [[i, j]]
+                    if i > 0:
+                        op_blocks.append([i - 1, j])
+                    if i < 9:
+                        op_blocks.append([i + 1, j])
+                    if j > 0:
+                        op_blocks.append([i, j - 1])
+                    if j < 9:
+                        op_blocks.append([i, j + 1])
 
-            if newState.board[i][j] == 7:
-                print('You cannot burn down ocean.')
-            else:
-                op_blocks = [[i, j]]
-                if i > 0:
-                    op_blocks.append([i - 1, j])
-                if i < 9:
-                    op_blocks.append([i + 1, j])
-                if j > 0:
-                    op_blocks.append([i, j - 1])
-                if j < 9:
-                    op_blocks.append([i, j + 1])
-
-                for block in op_blocks:
-                    if not (self.board[block[0]][block[1]] == 6 or \
-                            self.board[block[0]][block[1]] == 7):
-                        newState.board[block[0]][block[1]] = 1
-                for i in range(len(op_blocks)):
-                    newState.gg += 25
+                    for block in op_blocks:
+                        if not (self.board[block[0]][block[1]] == 6 or \
+                                self.board[block[0]][block[1]] == 7):
+                            newState.board[block[0]][block[1]] = 1
+                    for i in range(len(op_blocks)):
+                        newState.gg += 25
+            else: print('You can only burn down forest')
 
 
         elif actionSelected == 'Build house':
-            newState.board[i][j] = 5
-            newState.gold -= 5 # capacity 1500, LQ decrease by 10 if no power, by 30 if full WIP
-
+            power = 0
+            house = 0
+            for x in range(10):
+                for y in range(10):
+                    if newState.board[x][y] == 4:
+                        power += 1
+                    if newState.board[x][y] == 5:
+                        house += 1
+            electricity = True
+            if power * 3 <= house:
+                print('You need one power plant for every three house')
+                electricity = False
+            if newState.board[i][j] == 1 and newState.gold >= 5 and electricity == True:
+                newState.board[i][j] = 5
+                newState.gold -= 5 # capacity 1500, if full, LQ decrease 30 food and temp influence LQ
+            else: print ("The space is not available or you don't have enough money")
         elif actionSelected == 'Cut down forest':
-            newState.board[i][j] = 1
-            newState.wood += 5
-            newState.gold -= 15
+            if newState.board[i][j] == 0 and newState.gold >= 15:
+                newState.board[i][j] = 1
+                newState.wood += 5
+                newState.gold -= 15
+            else: print ("You can only cut down forest. At least 15 gold is needed")
 
         elif actionSelected == 'Mine coal':
-            newState.board[i][j] = 3
-            newState.gold -= 10
-            newState.gg += 20
+            if newState.board[i][j] == 1 and newState.gold >= 10:
+                newState.board[i][j] = 3
+                newState.gold -= 10
+                newState.gg += 20
+            else: print ("You can only mine on empty spaces, or you don't have 10 gold.")
 
         elif actionSelected == 'Build power plant':
-            newState.board[i][j] = 4
-            #pre-req mining one, can supply 3 house
+            mining = 0
+            powerplant = 0
+            for x in range(10):
+                for y in range(10):
+                    if newState.board[x][y] == 3:
+                        mining += 1
+                    if newState.board[x][y] == 4:
+                        powerplant += 1
+            mine = True
+            if powerplant >= mining:
+                print('One mine required for each powerplant')
+                mine = False
+            if newState.wood >= 5 and newState.gold >= 15 and newState.board[i][j] == 1 and mine == True:
+                newState.board[i][j] = 4
+            else: print ("You need 15 gold and 5 wood to build a powerplant. And you can only build on empty space.")
+            #pre-req mining on
 
         for i in range(10):
             newState.gg += 15 * self.board[i].count(4)
@@ -307,7 +343,8 @@ class Game_state:
             newState.gg -= 0.5 * self.board[i].count(0)
             newState.gold += 10 * self.board[i].count(3)
             newState.food -= 0.2 * self.p
-            #decrease of food in progress, 1 food for 5 people
+            newState.food += 20 * self.board[i][j].count(2)#added feature: 20 food per farm
+            #BUG: change of these properties regardless of if the operator is successfully applied
         return newState
 
 '''
@@ -372,7 +409,7 @@ initialState = {
                 'gg': 0,                # Greenhouse Gas
                 'gold': 50,             # Gold
                 'wood': 0,              # Wood
-                'food': 0,              # Food
+                'food': 80,              # Food
                 'lq': 100,              # Living Quality
                 'temp': 0,              # Average Temperature
                 'board': board,         # Game Board

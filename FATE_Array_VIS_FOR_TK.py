@@ -68,7 +68,7 @@ def render_state(s):
 
     for i in range(10):
       for j in range(10):
-        the_color_array[i][j] = color_dic[s()['board'][i][j]]
+        the_color_array[i][j] = color_dic[s.board[i][j]]
         the_string_array[i][j] = translate[the_color_array[i][j]]
 
 

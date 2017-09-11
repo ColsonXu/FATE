@@ -36,7 +36,7 @@ PROBLEM_DESC=\
 
 '''A list which stores integers representing a state that can change to other
 states.'''
-MUTABLE_STATES = [0, 1, 3]
+MUTABLE_STATES = [0, 1]
 
 
 '''
@@ -162,16 +162,13 @@ class Game_state:
                 for j in range(10):
                     blockState = self.board[i][j]
                     if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
-                        blockState = self.board[i][j]
-                        if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
-                            if blockState == 0 and actionSelected in \
-                            ['Burn down forest', 'Cut down forest']:
-                                return True
-                            elif blockState == 1 and actionSelected in \
-                            ['Build cattle farm', 'Mine coal', 'Build house']:
-                                return True
-                            elif blockState == 3 and actionSelected == 'Build power plant':
-                                return True
+                        if blockState == 0 and actionSelected in \
+                        ['Burn down forest', 'Cut down forest']:
+                            return True
+                        elif blockState == 1 and actionSelected in \
+                        ['Build cattle farm', 'Mine coal', 'Build power plant',
+                        'Build house']:
+                            return True
             return False
         elif self.nextInput == 'col':
             '''Filtrates all operators that are a column selection operator.'''
@@ -199,7 +196,7 @@ class Game_state:
                             return True
                         elif blockState == 3 and actionSelected == 'Build power plant':
                             return True
-        return False
+            return False
 
     '''
         Executes an operator.
@@ -233,13 +230,13 @@ class Game_state:
                     try:
                         i = int(input('Enter the row: >> ')) - 1
                         j = int(input('Enter the column: >> ')) - 1
-                        if 0 <= i < 11 and 0 <= j < 11:
+                        if 0 <= i < 10 and 0 <= j < 10:
                             newState = self.changeGrid(i, j, action)
                             break
                         else:
                             print('Your input is out of the range. Please try again.')
                     except Exception as e:
-                        print (e)
+                        print(e)
                         print('Invalid input. Please try again.')
 
         elif self.nextInput == 'row':
@@ -288,7 +285,7 @@ class Game_state:
                     for x in range(10):
                         for y in range(10):
                             newState.board[x][y] = 7
-                
+
                 if newState.board[i][j] == 7:
                     print('You cannot burn down ocean.')
                 else:

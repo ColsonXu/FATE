@@ -1,4 +1,5 @@
 import copy
+from random import randint
 
 '''
 Missionaries.py
@@ -49,6 +50,18 @@ def copy_state(s):
 
 def describe_state(stateObject):
     return str(stateObject)
+
+def op_blocks(i, j):
+    blocks = [[i, j]]
+    if i > 0:
+        blocks.append([i - 1, j])
+    if i < 9:
+        blocks.append([i + 1, j])
+    if j > 0:
+        blocks.append([i, j - 1])
+    if j < 9:
+        blocks.append([i, j + 1])
+    return blocks
 
 class Game_state:
     '''
@@ -276,21 +289,11 @@ class Game_state:
                 if newState.board[i][j] == 7:
                     print('You cannot burn down ocean.')
                 else:
-                    op_blocks = [[i, j]]
-                    if i > 0:
-                        op_blocks.append([i - 1, j])
-                    if i < 9:
-                        op_blocks.append([i + 1, j])
-                    if j > 0:
-                        op_blocks.append([i, j - 1])
-                    if j < 9:
-                        op_blocks.append([i, j + 1])
-
-                    for block in op_blocks:
+                    for block in op_blocks(i, j):
                         if not (self.board[block[0]][block[1]] == 6 or \
                                 self.board[block[0]][block[1]] == 7):
                             newState.board[block[0]][block[1]] = 1
-                    for i in range(len(op_blocks)):
+                    for i in range(len(op_blocks(i, j))):
                         newState.gg += 25
             else:
                 print('You can only burn down forest')
@@ -357,6 +360,19 @@ class Game_state:
         if apply:
             newState.food -= 0.2 * self.p
             newState.p = int(1.079 * self.p)
+            if newState.temp >= 1 and randint(1, 3) == 1:
+                forest = False
+                while not forest:
+                    i = randint(0, 9)
+                    j = randint(0, 9)
+                    if self.board[i][j] == 0:
+                        for block in op_blocks(i, j):
+                            newState.board[block[0]][block[1]] = 1
+                print('Due to high temperture, forest fire happened at row %d, column %d, and burned down near blocks.'\
+                      %(i + 1, j + 1))
+
+
+
             for i in range(10):
                 newState.gg += 15 * self.board[i].count(4)
                 newState.gg += 10 * self.board[i].count(2)

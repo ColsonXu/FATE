@@ -303,7 +303,7 @@ class Game_state:
             newState()['gg'] += 10 * self()['board'][i].count(2)
             newState()['gg'] -= 0.5 * self()['board'][i].count(0)
             newState()['gold'] += 10 * self()['board'][i].count(3)
-            #decrease of food in progress, 1 food for 5 people
+            newState()['food'] -= 0.2 * self()['p']
         return newState
 
 '''

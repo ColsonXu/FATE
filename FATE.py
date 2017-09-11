@@ -1,4 +1,5 @@
 import copy
+from tkinter import *
 
 '''
 Missionaries.py
@@ -32,7 +33,6 @@ PROBLEM_DESC=\
 #</COMMON_DATA>
 
 #<COMMON_CODE>
-
 
 def copy_state(s):
     return copy.deepcopy(s)

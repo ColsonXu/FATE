@@ -62,7 +62,7 @@ PURPOSE OF THIS MODULE:
     powerful problem solving tool, useful in several different
     modes of use: interactive processing of individual objects,
     programming by demonstration (the path from the root to any
-    other node in the state space represents a way of processing
+    other node in the state space reparesents a way of processing
     any object similar in structure to that of the root object.)
 
     """

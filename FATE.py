@@ -1,5 +1,4 @@
 import copy
-from tkinter import *
 
 '''
 Missionaries.py

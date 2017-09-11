@@ -147,52 +147,12 @@ class Game_state:
         elif self.nextInput == 'row':
             '''Filtrates all operators that are a row selection operator.'''
             if 'Select row' in action:
-                actionSelected = self.selectedAction
-                '''Converts row selection to index of the list for the board.'''
-                row = int(action[-1])
-                if row == 0:
-                    i = 9
-                else:
-                    i = row - 1
-                '''Loops through all blocks in the row and sees if there is any
-                block where the action selected is applicable.'''
-                for j in range(10):
-                    blockState = self.board[i][j]
-                    if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
-                        if blockState == 0 and actionSelected in \
-                        ['Burn down forest', 'Cut down forest']:
-                            return True
-                        elif blockState == 1 and actionSelected in \
-                        ['Build cattle farm', 'Mine coal', 'Build power plant',
-                        'Build house']:
-                            return True
+                return True
             return False
         elif self.nextInput == 'col':
             '''Filtrates all operators that are a column selection operator.'''
             if 'Select column' in action:
-                actionSelected = self.selectedAction
-                i = self.selectedRow
-                '''Converts column selection to index of the second-level list for
-                the board.'''
-                col = int(action[-1])
-                if col == 0:
-                    j = 9
-                else:
-                    j = col - 1
-                blockState = self.board[i][j]
-                '''Evaluates all blocks in the row selected and sees if there is any
-                block where the action selected is applicable.'''
-                if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
-                    blockState = self.board[i][j]
-                    if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
-                        if blockState == 0 and actionSelected in \
-                        ['Burn down forest', 'Cut down forest']:
-                            return True
-                        elif blockState == 1 and actionSelected in \
-                        ['Build cattle farm', 'Mine coal', 'Build house']:
-                            return True
-                        elif blockState == 3 and actionSelected == 'Build power plant':
-                            return True
+                return True
             return False
 
     '''

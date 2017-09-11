@@ -357,9 +357,10 @@ class Game_state:
                 print ("You need 15 gold and 5 wood to build a powerplant. And you can only build on empty space.")
                 apply = False
 
-        if apply:
+        if apply:#when temp rise to 1 and more, there's 1/3 chance of a forest fire that also burn down near blocks
             newState.food -= 0.2 * self.p
             newState.p = int(1.079 * self.p)
+            newState.temp = 0.01 * self.gg
             if newState.temp >= 1 and randint(1, 3) == 1:
                 forest = False
                 while not forest:
@@ -395,7 +396,7 @@ class Game_state:
 def goal_test(state):
     if state.temp < 2 and state.lq > 60 and state.p > 4500:
         return True
-    return False# aim is 50 round
+    return False# aim is 50 round, state.p should change, WIP
 
 '''
     :param mixed s

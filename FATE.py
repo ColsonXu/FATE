@@ -37,6 +37,7 @@ PROBLEM_DESC=\
 states.'''
 MUTABLE_STATES = [0, 1, 3]
 
+
 '''
     Makes a deep copy of a Game_state instance.
 
@@ -44,9 +45,23 @@ MUTABLE_STATES = [0, 1, 3]
 
     :return Game_state: The copied Game_state instance.
 '''
-
 def copy_state(s):
     return s.__copy__()
+
+def describe_state(stateObject):
+    return str(stateObject)
+
+def op_blocks(i, j):
+    blocks = [[i, j]]
+    if i > 0:
+        blocks.append([i - 1, j])
+    if i < 9:
+        blocks.append([i + 1, j])
+    if j > 0:
+        blocks.append([i, j - 1])
+    if j < 9:
+        blocks.append([i, j + 1])
+    return blocks
 
 class Game_state:
     '''
@@ -74,8 +89,7 @@ class Game_state:
         :return Game_state: The copied Game_state instance.
     '''
     def __copy__(self):
-        newState = copy.deepcopy(self)
-        return newState
+        return copy.deepcopy(self)
 
     '''
         Returns a caption which represents some information about the current
@@ -88,7 +102,7 @@ class Game_state:
                   "Wood:", self.wood, "Food:", self.food, \
                   "Living Quality:", self.lq, "ΔTemp.:", \
                   self.temp
-        return str(caption)
+        return str(caption)  #return caption or the state???
 
     '''
         Compares two states and returns whether they are identical.
@@ -108,7 +122,7 @@ class Game_state:
             return True
 
     def __hash__(self):
-        return (str(self)).hash()
+        return (str(self)).__hash__()
 
     '''
         Evaluates whether an operator is legal under the current state.
@@ -220,7 +234,8 @@ class Game_state:
                             break
                         else:
                             print('Your input is out of the range. Please try again.')
-                    except:
+                    except Exception as e:
+                        print (e)
                         print('Invalid input. Please try again.')
 
         elif self.nextInput == 'row':
@@ -249,6 +264,7 @@ class Game_state:
 
     def changeGrid(self, i, j, actionSelected):
         newState = self.__copy__()
+        apply = True
 
         '''Changes state of the block where the player chooses.'''
         if actionSelected == 'Build cattle farm':
@@ -257,7 +273,9 @@ class Game_state:
                 newState.wood -= 5
                 newState.gold -= 5
                 newState.food += 100
-            else: print ("You don't have 5 wood and 5 gold or the selected square is not empty")
+            else:
+                print ("You don't have 5 wood and 5 gold or the selected square is not empty")
+                apply = False
 
         elif actionSelected == 'Burn down forest':
             '''if you burn the glacial, all board turns to water. just for fun'''
@@ -270,23 +288,15 @@ class Game_state:
                 if newState.board[i][j] == 7:
                     print('You cannot burn down ocean.')
                 else:
-                    op_blocks = [[i, j]]
-                    if i > 0:
-                        op_blocks.append([i - 1, j])
-                    if i < 9:
-                        op_blocks.append([i + 1, j])
-                    if j > 0:
-                        op_blocks.append([i, j - 1])
-                    if j < 9:
-                        op_blocks.append([i, j + 1])
-
-                    for block in op_blocks:
+                    for block in op_blocks(i, j):
                         if not (self.board[block[0]][block[1]] == 6 or \
                                 self.board[block[0]][block[1]] == 7):
                             newState.board[block[0]][block[1]] = 1
-                    for i in range(len(op_blocks)):
+                    for i in range(len(op_blocks(i, j))):
                         newState.gg += 25
-            else: print('You can only burn down forest')
+            else:
+                print('You can only burn down forest')
+                apply = False
 
 
         elif actionSelected == 'Build house':
@@ -301,24 +311,31 @@ class Game_state:
             electricity = True
             if power * 3 <= house:
                 print('You need one power plant for every three house')
+                apply = False
                 electricity = False
             if newState.board[i][j] == 1 and newState.gold >= 5 and electricity == True:
                 newState.board[i][j] = 5
                 newState.gold -= 5 # capacity 1500, if full, LQ decrease 30 food and temp influence LQ
-            else: print ("The space is not available or you don't have enough money")
+            else:
+                print ("The space is not available or you don't have enough money")
+                apply = False
         elif actionSelected == 'Cut down forest':
             if newState.board[i][j] == 0 and newState.gold >= 15:
                 newState.board[i][j] = 1
                 newState.wood += 5
                 newState.gold -= 15
-            else: print ("You can only cut down forest. At least 15 gold is needed")
+            else:
+                print ("You can only cut down forest. At least 15 gold is needed")
+                apply = False
 
         elif actionSelected == 'Mine coal':
             if newState.board[i][j] == 1 and newState.gold >= 10:
                 newState.board[i][j] = 3
                 newState.gold -= 10
                 newState.gg += 20
-            else: print ("You can only mine on empty spaces, or you don't have 10 gold.")
+            else:
+                print ("You can only mine on empty spaces, or you don't have 10 gold.")
+                apply = False
 
         elif actionSelected == 'Build power plant':
             mining = 0
@@ -335,17 +352,34 @@ class Game_state:
                 mine = False
             if newState.wood >= 5 and newState.gold >= 15 and newState.board[i][j] == 1 and mine == True:
                 newState.board[i][j] = 4
-            else: print ("You need 15 gold and 5 wood to build a powerplant. And you can only build on empty space.")
-            #pre-req mining on
+            else:
+                print ("You need 15 gold and 5 wood to build a powerplant. And you can only build on empty space.")
+                apply = False
 
-        for i in range(10):
-            newState.gg += 15 * self.board[i].count(4)
-            newState.gg += 10 * self.board[i].count(2)
-            newState.gg -= 0.5 * self.board[i].count(0)
-            newState.gold += 10 * self.board[i].count(3)
+        if apply:#when temp rise to 1 and more, there's 1/3 chance of a forest fire that also burn down near blocks
             newState.food -= 0.2 * self.p
-            newState.food += 20 * self.board[i][j].count(2)#added feature: 20 food per farm
-            #BUG: change of these properties regardless of if the operator is successfully applied
+            newState.p = int(1.079 * self.p)
+            newState.temp = 0.01 * self.gg
+            if newState.temp >= 1 and randint(1, 3) == 1:
+                forest = False
+                while not forest:
+                    i = randint(0, 9)
+                    j = randint(0, 9)
+                    if self.board[i][j] == 0:
+                        for block in op_blocks(i, j):
+                            newState.board[block[0]][block[1]] = 1
+                print('Due to high temperture, forest fire happened at row %d, column %d, and burned down near blocks.'\
+                      %(i + 1, j + 1))
+
+
+
+            for i in range(10):
+                newState.gg += 15 * self.board[i].count(4)
+                newState.gg += 10 * self.board[i].count(2)
+                newState.gg -= 0.5 * self.board[i].count(0)
+                newState.gold += 10 * self.board[i].count(3)
+                newState.food += 20 * self.board[i].count(2)
+
         return newState
 
 '''
@@ -361,7 +395,7 @@ class Game_state:
 def goal_test(state):
     if state.temp < 2 and state.lq > 60 and state.p > 4500:
         return True
-    return False
+    return False# aim is 50 round, state.p should change, WIP
 
 '''
     :param mixed s
@@ -410,7 +444,7 @@ initialState = {
                 'gg': 0,                # Greenhouse Gas
                 'gold': 50,             # Gold
                 'wood': 0,              # Wood
-                'food': 80,              # Food
+                'food': 120,              # Food
                 'lq': 100,              # Living Quality
                 'temp': 0,              # Average Temperature
                 'board': board,         # Game Board

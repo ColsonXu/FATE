@@ -355,12 +355,13 @@ class Game_state:
                 apply = False
 
         if apply:
+            newState.food -= 0.2 * self.p
+            newState.p = int(1.079 * self.p)
             for i in range(10):
                 newState.gg += 15 * self.board[i].count(4)
                 newState.gg += 10 * self.board[i].count(2)
                 newState.gg -= 0.5 * self.board[i].count(0)
                 newState.gold += 10 * self.board[i].count(3)
-                newState.food -= 0.2 * self.p
                 newState.food += 20 * self.board[i].count(2)
 
         return newState
@@ -378,7 +379,7 @@ class Game_state:
 def goal_test(state):
     if state.temp < 2 and state.lq > 60 and state.p > 4500:
         return True
-    return False
+    return False# aim is 50 round
 
 '''
     :param mixed s
@@ -427,7 +428,7 @@ initialState = {
                 'gg': 0,                # Greenhouse Gas
                 'gold': 50,             # Gold
                 'wood': 0,              # Wood
-                'food': 80,              # Food
+                'food': 120,              # Food
                 'lq': 100,              # Living Quality
                 'temp': 0,              # Average Temperature
                 'board': board,         # Game Board

@@ -1,4 +1,5 @@
 import copy
+from random import randint
 
 '''
 Missionaries.py

@@ -15,7 +15,7 @@ TITLE = 'FATE'
 
 def initialize_vis():
     initialize_tk(WIDTH, HEIGHT, TITLE)
-  
+
 
 def render_state(s):
     global myFont
@@ -35,24 +35,24 @@ def render_state(s):
 
 
     translate = {
-                plants: 'Tree', 
-                ice: 'Ice', 
-                beef: 'Farm', 
-                ocean: 'Ocean', 
-                empty: 'Empty', 
-                house: 'House', 
-                power: 'Power\n Plant', 
+                plants: 'Tree',
+                ice: 'Ice',
+                beef: 'Farm',
+                ocean: 'Ocean',
+                empty: 'Empty',
+                house: 'House',
+                power: 'Power\n Plant',
                 mine: 'Mine'
                 }
 
     color_dic = {
-                0: plants, 
-                1: empty, 
-                2: beef, 
-                3: mine, 
-                4: power, 
-                5: house, 
-                6: ice, 
+                0: plants,
+                1: empty,
+                2: beef,
+                3: mine,
+                4: power,
+                5: house,
+                6: ice,
                 7: ocean
                 }
 
@@ -68,12 +68,12 @@ def render_state(s):
 
     for i in range(10):
       for j in range(10):
-        the_color_array[i][j] = color_dic[s['board'][i][j]]
+        the_color_array[i][j] = color_dic[s.board[i][j]]
         the_string_array[i][j] = translate[the_color_array[i][j]]
 
-        
-    
-    caption = "Current state of the puzzle. Textual version: " + FATE.describe_state(s)
+
+
+    caption = "Current state of the puzzle. Textual version: " + str(s)
     the_state_array = state_array(color_array = the_color_array,
                                   string_array = the_string_array,
                                   text_font = myFont,

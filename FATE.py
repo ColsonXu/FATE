@@ -98,7 +98,7 @@ INITIAL_STATE_DICT = {
                 'selectedRow': 0       # Current row selected by the user
                 }
 
-class Game_state:
+class Game_State:
     '''
         Game_state constructor.
 

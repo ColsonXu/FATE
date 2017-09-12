@@ -59,7 +59,7 @@ except Exception as e:
 
 def test_state():
   try:
-    gs = PROBLEM.Game_state
+    gs = PROBLEM.Game_State
   except Exception as e:
     print("class Game_state could not be found in the problem formulation.")
     print(e)

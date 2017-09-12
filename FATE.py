@@ -67,13 +67,44 @@ def op_blocks(i, j, state):
             del blocks[blocks.index(block)]
     return blocks
 
+'''
+    Block Code Index:
+
+    0: Plants
+    1: Empty Space
+    2: Cattle Farm
+    3: Coal Mine
+    4: Power Plant
+    5: House
+    6: Ice
+    7: Ocean
+'''
+
+row = [0] * 10
+board = [row[:] for i in range(9)]
+board.append([7, 7, 7, 7, 7, 7, 7, 7, 7, 6])
+
+INITIAL_STATE_DICT = {
+                'p': 100,               # Population
+                'gg': 0,                # Greenhouse Gas
+                'gold': 50,             # Gold
+                'wood': 0,              # Wood
+                'food': 120,              # Food
+                'lq': 100,              # Living Quality
+                'temp': 0,              # Average Temperature
+                'board': board,         # Game Board
+                'nextInput': 'action',  # The next input that the user is making
+                'selectedAction': '',   # Current action selected by the user
+                'selectedRow': 0       # Current row selected by the user
+                }
+
 class Game_state:
     '''
         Game_state constructor.
 
         :param dict state: Initial state of the new Game_state instance.
     '''
-    def __init__(self, state):
+    def __init__(self, state = INITIAL_STATE_DICT):
         self.p = state['p']
         self.gg = state['gg']
         self.gold = state['gold']
@@ -357,38 +388,7 @@ class Operator:
 
 #<INITIAL_STATE>
 
-    '''
-    Block Code Index:
-
-    0: Plants
-    1: Empty Space
-    2: Cattle Farm
-    3: Coal Mine
-    4: Power Plant
-    5: House
-    6: Ice
-    7: Ocean
-    '''
-
-row = [0] * 10
-board = [row[:] for i in range(9)]
-board.append([7, 7, 7, 7, 7, 7, 7, 7, 7, 6])
-
-initialState = {
-                'p': 100,               # Population
-                'gg': 0,                # Greenhouse Gas
-                'gold': 50,             # Gold
-                'wood': 0,              # Wood
-                'food': 120,              # Food
-                'lq': 100,              # Living Quality
-                'temp': 0,              # Average Temperature
-                'board': board,         # Game Board
-                'nextInput': 'action',  # The next input that the user is making
-                'selectedAction': '',   # Current action selected by the user
-                'selectedRow': 0       # Current row selected by the user
-                }
-
-INITIAL_STATE = Game_state(initialState)
+INITIAL_STATE = Game_state(INITIAL_STATE_DICT)
 
 #</INITIAL_STATE>
 

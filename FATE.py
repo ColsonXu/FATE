@@ -40,11 +40,11 @@ MUTABLE_STATES = [0, 1]
 
 
 '''
-    Makes a deep copy of a Game_state instance.
+    Makes a deep copy of a Game_State instance.
 
-    :param Game_state s: The source that is being copied.
+    :param Game_State s: The source that is being copied.
 
-    :return Game_state: The copied Game_state instance.
+    :return Game_State: The copied Game_State instance.
 '''
 def copy_state(s):
     return s.__copy__()
@@ -100,9 +100,9 @@ INITIAL_STATE_DICT = {
 
 class Game_State:
     '''
-        Game_state constructor.
+        Game_State constructor.
 
-        :param dict state: Initial state of the new Game_state instance.
+        :param dict state: Initial state of the new Game_State instance.
     '''
     def __init__(self, state = INITIAL_STATE_DICT):
         self.p = state['p']
@@ -120,7 +120,7 @@ class Game_State:
     '''
         Makes a deep copy of the current instance.
 
-        :return Game_state: The copied Game_state instance.
+        :return Game_State: The copied Game_State instance.
     '''
     def __copy__(self):
         return copy.deepcopy(self)
@@ -141,7 +141,7 @@ class Game_State:
     '''
         Compares two states and returns whether they are identical.
 
-        :param Game_state other: The other state being compared.
+        :param Game_State other: The other state being compared.
 
         :return bool
     '''
@@ -188,7 +188,7 @@ class Game_State:
 
         :param str action: The operator executed.
 
-        :return Game_state: A new game state produced by the action.
+        :return Game_State: A new game state produced by the action.
     '''
     def takeAction(self, action):
         newState = self.__copy__()
@@ -354,7 +354,7 @@ class Game_State:
     - Living quality level should be greater than 60
     - Population should be more than 4500
 
-    :param Game_state state: The game state evaluated.
+    :param Game_State state: The game state evaluated.
 
     :return bool
 '''
@@ -388,7 +388,7 @@ class Operator:
 
 #<INITIAL_STATE>
 
-INITIAL_STATE = Game_state(INITIAL_STATE_DICT)
+INITIAL_STATE = Game_State(INITIAL_STATE_DICT)
 
 #</INITIAL_STATE>
 

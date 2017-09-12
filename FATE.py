@@ -1,5 +1,6 @@
 import copy
 from random import randint
+import time
 
 '''
 Missionaries.py
@@ -96,7 +97,8 @@ INITIAL_STATE_DICT = {
                 'nextInput': 'player',  # The next input that the user is making
                 'selectedAction': '',   # Current action selected by the user
                 'selectedRow': 0,       # Current row selected by the user
-                'playerType': ''
+                'playerType': '',
+                'gameYear': 1
                 }
 
 class Game_State:
@@ -118,6 +120,7 @@ class Game_State:
         self.selectedAction = state['selectedAction']
         self.selectedRow = state['selectedRow']
         self.playerType = state['playerType']
+        self.gameYear = state['gameYear']
 
     '''
         Makes a deep copy of the current instance.
@@ -355,6 +358,10 @@ class Game_State:
             newState.food -= 0.2 * self.p
             newState.p = int(1.079 * self.p)
             newState.temp = 0.01 * self.gg
+            newState.gameYear += 1
+            print ('GameYear: %d' %newState.gameYear)
+            time.sleep(3)
+
             if newState.temp >= 1 and randint(1, 3) == 1:
                 forest = False
                 while not forest:

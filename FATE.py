@@ -93,9 +93,10 @@ INITIAL_STATE_DICT = {
                 'lq': 100,              # Living Quality
                 'temp': 0,              # Average Temperature
                 'board': board,         # Game Board
-                'nextInput': 'action',  # The next input that the user is making
+                'nextInput': 'player',  # The next input that the user is making
                 'selectedAction': '',   # Current action selected by the user
-                'selectedRow': 0       # Current row selected by the user
+                'selectedRow': 0,       # Current row selected by the user
+                'playerType': ''
                 }
 
 class Game_State:
@@ -116,6 +117,7 @@ class Game_State:
         self.nextInput = state['nextInput']
         self.selectedAction = state['selectedAction']
         self.selectedRow = state['selectedRow']
+        self.playerType = state['playerType']
 
     '''
         Makes a deep copy of the current instance.
@@ -166,10 +168,15 @@ class Game_State:
         :return bool
     '''
     def isActionAvailable(self, action):
-        if self.nextInput == 'action':
+        if self.nextInput == 'player':
+            if 'I am' in action:
+                return True
+            return False
+        elif self.nextInput == 'action':
             '''Filtrates all operators that are not a row/column selection operator
             or a dummy operator.'''
-            if not 'Select' in action and action != 'Dummy operator':
+            if not 'Select' in action and action != 'Dummy operator' and not \
+            'I am' in action:
                 return True
             return False
         elif self.nextInput == 'row':
@@ -198,9 +205,31 @@ class Game_State:
         the next value it ought to have.
         The order of entering those operators are action, row, and column.'''
 
-        if self.nextInput == 'action':
-            newState.nextInput = 'row'
-            newState.selectedAction = action
+        if self.nextInput == 'player':
+            newState.nextInput = 'action'
+            if action == 'I am a human':
+                newState.playerType = 'human'
+            else:
+                newState.playerType = 'bot'
+
+        elif self.nextInput == 'action':
+            if self.playerType == 'bot':
+                newState.nextInput = 'row'
+                newState.selectedAction = action
+            else:
+                newState.nextInput = 'action'
+                while True:
+                    try:
+                        i = int(input('Enter the row: >> ')) - 1
+                        j = int(input('Enter the column: >> ')) - 1
+                        if 0 <= i < 10 and 0 <= j < 10:
+                            newState = self.changeGrid(i, j, action)
+                            break
+                        else:
+                            print('Your input is out of the range. Please try again.')
+                    except Exception as e:
+                        print(e)
+                        print('Invalid input. Please try again.')
 
         elif self.nextInput == 'row':
             newState.nextInput = 'col'
@@ -398,8 +427,10 @@ actions = [ 'Burn down forest',
             'Build cattle farm',
             'Mine coal',
             'Build power plant',
-            'Build house'] + \
-            ['Dummy operator' for i in range(5)] + \
+            'Build house',
+            'I am a human',
+            'I am not a human'] + \
+            ['Dummy operator' for i in range(3)] + \
             ['Select %s %d' %(string, i) for string in ['row', 'column'] for i \
             in range(1, 11)]
 '''Dummy operator allows the player to enter 11 rather than 6 for row

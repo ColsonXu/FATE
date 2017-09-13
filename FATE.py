@@ -137,10 +137,10 @@ class Game_State:
         :return str: The caption representing the current state.
     '''
     def __str__(self):
-        caption = "Polulation:", self.p, "Gold:", self.gold, \
-                  "Wood:", self.wood, "Food:", self.food, \
-                  "Living Quality:", self.lq, "ΔTemp.:", \
-                  self.temp
+        caption = "Polulation:", int(self.p), "Gold:", int(self.gold), \
+                  "Wood:", int(self.wood), "Food:", int(self.food), \
+                  "Living Quality:", int(self.lq), "ΔTemp.:", \
+                  int(self.temp)
         return str(caption)  #return caption or the state???
 
     '''
@@ -276,23 +276,20 @@ class Game_State:
         elif actionSelected == 'Burn down forest':
             '''if you burn the glacial, all board turns to water. just for fun'''
             if newState.board[i][j] == 0:
+                for block in op_blocks(i, j, self):
+                    if not (self.board[block[0]][block[1]] == 6 or \
+                            self.board[block[0]][block[1]] == 7):
+                        newState.board[block[0]][block[1]] = 1
+                for i in range(len(op_blocks(i, j, self))):
+                    newState.gg += 25
+            else:
                 if i == 9 and j == 9:
                     for x in range(10):
                         for y in range(10):
                             newState.board[x][y] = 7
-
-                if newState.board[i][j] == 7:
-                    print('You cannot burn down ocean.')
                 else:
-                    for block in op_blocks(i, j, self):
-                        if not (self.board[block[0]][block[1]] == 6 or \
-                                self.board[block[0]][block[1]] == 7):
-                            newState.board[block[0]][block[1]] = 1
-                    for i in range(len(op_blocks(i, j, self))):
-                        newState.gg += 25
-            else:
-                print('You can only burn down forest')
-                apply = False
+                    print('You can only burn down forest')
+                    apply = False
 
 
         elif actionSelected == 'Build house':
@@ -373,7 +370,8 @@ class Game_State:
                 print('Due to high temperture, forest fire happened at row %d, column %d, and burned down near blocks.'\
                       %(i + 1, j + 1))
 
-
+            if newState.gg < 0:
+                newState.gg = 0
 
             for i in range(10):
                 newState.gg += 15 * self.board[i].count(4)

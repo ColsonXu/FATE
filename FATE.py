@@ -111,6 +111,16 @@ def slowly_change(stateObject):
                 break
 
     for i in range(10):
+        for j in range(10):
+            if (i, j) not in newState.emptyDict and newState.board[i][j] == 1:
+                newState.emptyDict[(i, j)] = 0
+            elif (i, j) in newState.emptyDict and newState.emptyDict[(i, j)] < 3:
+                newState.emptyDict[(i, j)] += 1
+            elif (i, j) in newState.emptyDict and newState.emptyDict[(i, j)] >= 3:
+                newState.board[i][j] = 0
+                del(newState.emptyDict[(i, j)])
+
+    for i in range(10):
         stateObject.gg += 15 * stateObject.board[i].count(4)
         stateObject.gg += 10 * stateObject.board[i].count(2)
         stateObject.gg -= 0.5 * stateObject.board[i].count(0)
@@ -147,7 +157,8 @@ INITIAL_STATE_DICT = {
                 'selectedAction': '',   # Current action selected by the user
                 'selectedRow': 0,       # Current row selected by the user
                 'playerType': '',
-                'gameYear': 1
+                'gameYear': 1,
+                'emptyDict': {}
                 }
 
 class Game_State:
@@ -170,6 +181,7 @@ class Game_State:
         self.selectedRow = state['selectedRow']
         self.playerType = state['playerType']
         self.gameYear = state['gameYear']
+        self.emptyDict = state['emptyDict']
 
     '''
         Makes a deep copy of the current instance.

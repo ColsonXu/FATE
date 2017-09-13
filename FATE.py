@@ -68,6 +68,35 @@ def op_blocks(i, j, state):
             del blocks[blocks.index(block)]
     return blocks
 
+def slowly_change(stateObject):
+    stateObject.food -= 0.2 * stateObject.p
+    stateObject.p = int(1.079 * stateObject.p)
+    stateObject.temp = 0.01 * stateObject.gg
+    stateObject.gameYear += 1
+    print('GameYear: %d' % stateObject.gameYear)
+    time.sleep(3)
+
+    if stateObject.temp >= 1 and randint(1, 3) == 1:
+        forest = False
+        while not forest:
+            i = randint(0, 9)
+            j = randint(0, 9)
+            if stateObject.board[i][j] == 0:
+                for block in op_blocks(i, j, stateObject):
+                    stateObject.board[block[0]][block[1]] = 1
+        print('Due to high temperture, forest fire happened at row %d, column %d, and burned down near blocks.' \
+              % (i + 1, j + 1))
+
+    if stateObject.gg < 0:
+        stateObject.gg = 0
+
+    for i in range(10):
+        stateObject.gg += 15 * stateObject.board[i].count(4)
+        stateObject.gg += 10 * stateObject.board[i].count(2)
+        stateObject.gg -= 0.5 * stateObject.board[i].count(0)
+        stateObject.gold += 10 * stateObject.board[i].count(3)
+        stateObject.food += 20 * stateObject.board[i].count(2)
+
 '''
     Block Code Index:
 
@@ -324,34 +353,12 @@ class Game_State:
                 print ("You need 15 gold and 5 wood to build a powerplant. And you can only build on empty space.")
                 apply = False
 
+        elif actionSelected == 'Fasting forward 5 states':
+            for i in range(5):
+                slowly_change(newState)
+
         if apply:#when temp rise to 1 and more, there's 1/3 chance of a forest fire that also burn down near blocks
-            newState.food -= 0.2 * self.p
-            newState.p = int(1.079 * self.p)
-            newState.temp = 0.01 * self.gg
-            newState.gameYear += 1
-            print ('GameYear: %d' %newState.gameYear)
-            time.sleep(3)
-
-            if newState.temp >= 1 and randint(1, 3) == 1:
-                forest = False
-                while not forest:
-                    i = randint(0, 9)
-                    j = randint(0, 9)
-                    if self.board[i][j] == 0:
-                        for block in op_blocks(i, j, self):
-                            newState.board[block[0]][block[1]] = 1
-                print('Due to high temperture, forest fire happened at row %d, column %d, and burned down near blocks.'\
-                      %(i + 1, j + 1))
-
-            if newState.gg < 0:
-                newState.gg = 0
-
-            for i in range(10):
-                newState.gg += 15 * self.board[i].count(4)
-                newState.gg += 10 * self.board[i].count(2)
-                newState.gg -= 0.5 * self.board[i].count(0)
-                newState.gold += 10 * self.board[i].count(3)
-                newState.food += 20 * self.board[i].count(2)
+            slowly_change(newState)
 
         return newState
 
@@ -405,8 +412,11 @@ actions = [ 'Burn down forest',
             'Build cattle farm',
             'Mine coal',
             'Build power plant',
-            'Build house'] + \
-            ['Dummy operator' for i in range(5)] + \
+            'Build house',
+            'Fasting forward 5 states',
+            'I am a human',
+            'I am not a human'] + \
+            ['Dummy operator' for i in range(2)] + \
             ['Select %s %d' %(string, i) for string in ['row', 'column'] for i \
             in range(1, 11)]
 '''Dummy operator allows the player to enter 11 rather than 6 for row

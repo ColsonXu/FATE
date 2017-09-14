@@ -135,10 +135,13 @@ class Game_State:
         :return str: The caption representing the current state.
     '''
     def __str__(self):
-        caption = "\nPolulation: " + str(self.p) + "\nGold: " + str(self.gold) + \
-                  "\nWood: " + str(self.wood) + "\nFood: " + str(self.food) + \
-                  "\nLiving Quality: " + str(self.lq) + "\nΔTemp.: " + \
-                  str('%.2f' % self.temp)
+        caption = "\nPolulation: " + str(int(self.p)) + \
+                  "\nGold: " + str(int(self.gold)) + \
+                  "\nWood: " + str(int(self.wood)) + \
+                  "\nFood: " + str(int(self.food)) + \
+                  "\nLiving Quality: " + str(int(self.lq)) + \
+                  "\nΔTemp.: " + str('%.2f' % self.temp) + \
+                  "\nYear: " + str(self.gameYear)
         return caption
 
     '''

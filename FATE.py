@@ -38,6 +38,10 @@ PROBLEM_CREATION_DATE = "5-SEP-2017"
 # The following field is mainly for the human solver, via either the Text_SOLUZION_Client.
 # or the SVG graphics client.
 PROBLEM_DESC=\
+'''"FATE is an environmental game. You are the governer of this area.
+Let your people live a high quality life so they don't rebel. Also, please
+remember to protect the environment from depletion.
+'''
 #</METADATA>
 
 #<COMMON_DATA>

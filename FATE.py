@@ -26,7 +26,7 @@ PROBLEM_CREATION_DATE = "5-SEP-2017"
 # or the SVG graphics client.
 PROBLEM_DESC=\
 '''
-
+"WIP"
 '''
 #</METADATA>
 
@@ -78,7 +78,7 @@ def slowly_change(stateObject):
 
     print('GameYear: %d' % stateObject.gameYear)
 
-    if stateObject.temp >= 1.5 and randint(1, 3) == 1:
+    if stateObject.temp >= 1 and randint(1, 3) == 1:
         forest = False
         while not forest:
             i = randint(0, 9)
@@ -90,7 +90,7 @@ def slowly_change(stateObject):
         print('Due to high temperture, forest fire happened at row %d, column %d, and burned down near blocks.' \
               % (i + 1, j + 1))
 
-    if stateObject.temp >= 2.2:
+    if stateObject.temp >= 1.5:
         print('Sea level rising caused shore area being flooded.')
         for i in range(10):
             if (stateObject.board[i].count(7) == 9 and stateObject.board[i][9] == 6) or \
@@ -129,6 +129,26 @@ def slowly_change(stateObject):
         stateObject.gg -= 0.5 * stateObject.board[i].count(0)
         stateObject.gold += 10 * stateObject.board[i].count(3)
         stateObject.food += 20 * stateObject.board[i].count(2)
+
+    electricity = 0
+    house = 0
+    for i in range(10):
+        for j in range(10):
+            if stateObject.board[i][j] == 4:
+                electricity += 1
+            if stateObject.board[i][j] == 5:
+                house += 1
+    if house > electricity * 3:
+        stateObject.lq -= 10
+    if stateObject.temp >= 1.5:
+        stateObject.lq -= 3
+    if stateObject.p >= 150 * house and stateObject.p >= 350:
+        stateObject.lq -= 8
+    if house <= electricity * 3 and stateObject.temp < 1.5 and stateObject.p < 150 * house:
+        stateObject.lq += 2
+        if stateObject.lq > 100:
+            stateObject.lq = 100
+
 
 '''
     Block Code Index:
@@ -204,7 +224,7 @@ class Game_State:
         caption = "Polulation:", int(self.p), "Gold:", int(self.gold), \
                   "Wood:", int(self.wood), "Food:", int(self.food), \
                   "Living Quality:", int(self.lq), "ΔTemp.:", \
-                  int(self.temp)
+                  '%.2f' %self.temp
         return str(caption)  #return caption or the state???
 
     '''
@@ -345,7 +365,7 @@ class Game_State:
                             self.board[block[0]][block[1]] == 7):
                         newState.board[block[0]][block[1]] = 1
                 for i in range(len(op_blocks(i, j, self))):
-                    newState.gg += 25
+                    newState.gg += 20
             else:
                 if i == 9 and j == 9:
                     for x in range(10):
@@ -436,17 +456,29 @@ class Game_State:
     :return bool
 '''
 def goal_test(state):
-    if state.temp < 2 and state.lq > 60 and state.p > 4500:
+    if state.gameYear == 45:
+        print('You achieved the impossible! You managed to survive 60 years with \
+        your people, but the environment is still getting worse and worse.')
         return True
-    return False# aim is 50 round, state.p should change, WIP
+    if state.gameYear < 45:
+        if state.lq <= 60:
+            print('Your people are living in hell! They rebelled!')
+            return True
+        if state.food <= 0:
+            print('Your people starved to death!')
+            return True
+        if state.temp >= 2.5:
+            print('The temperature is too high! Your land become unlivable.')
+            return True
+        return False
+
+
 
 '''
     :param mixed s
 
     :return str
 '''
-def goal_message(s):
-    return "Wow, you achieved the impossible!"
 
 class Operator:
     def __init__(self, name, precond, state_transf):
@@ -498,7 +530,6 @@ GOAL_TEST = lambda s: goal_test(s)
 #</GOAL_TEST>
 
 #<GOAL_MESSAGE_FUNCTION> (optional)
-GOAL_MESSAGE_FUNCTION = lambda s: goal_message(s)
 #</GOAL_MESSAGE_FUNCTION>
 
 #<STATE_VIS>

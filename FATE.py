@@ -63,8 +63,8 @@ def copy_state(s):
 '''
     Returns blocks burnt when a tree burning event is initiated.
 
-    :param int            i: Index of row of the fire event's center.
-    :param int            j: Index of column of the fire event's center.
+    :param int        i:     Index of row of the fire event's center.
+    :param int        j:     Index of column of the fire event's center.
     :param Game_State state: Current game state.
 
     :return list: A list containing the given block plus all adjacent blocks.

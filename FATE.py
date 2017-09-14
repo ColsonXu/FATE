@@ -397,7 +397,6 @@ class Game_State:
         if apply:#when temp rise to 1 and more, there's 1/3 chance of a forest fire that also burn down near blocks
             newState.slowly_change()
 
-        time.sleep(2.5)
         return newState
 
     '''

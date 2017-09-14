@@ -93,7 +93,7 @@ Do you wish to continue exploring?
       else: return
 
     applicability_vector = get_applicability_vector(CURRENT_STATE)
-    #print("applicability_vector = "+str(applicability_vector))
+    # print("applicability_vector = "+str(applicability_vector))
     for i in range(len(OPERATORS)):
       if applicability_vector[i]:
         print(str(i)+": "+OPERATORS[i].name)
@@ -132,10 +132,10 @@ Do you wish to continue exploring?
     else:
        print("Operator "+str(i)+" is not applicable to the current state.")
        continue
-    #print("Operator "+command+" not yet supported.")
+    # print("Operator "+command+" not yet supported.")
 
 def get_applicability_vector(s):
-    #print("OPERATORS: "+str(OPERATORS))
+    # print("OPERATORS: "+str(OPERATORS))
     return [op.is_applicable(s) for op in OPERATORS]  
 
 def exit_client():
@@ -164,8 +164,8 @@ def apply_one_op():
     """Populate a popup menu with the names of currently applicable
        operators, and let the user choose which one to apply."""
     currently_applicable_ops = applicable_ops(CURRENT_STATE)
-    #print "Applicable operators: ",\
-    #    map(lambda o: o.name, currently_applicable_ops)
+    # print "Applicable operators: ",\
+    # map(lambda o: o.name, currently_applicable_ops)
     print("Now need to apply the op")
 
 def applicable_ops(s):

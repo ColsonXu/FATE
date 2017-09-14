@@ -277,11 +277,11 @@ class Game_State:
         elif actionSelected == 'Burn down forest':
             # if you burn the glacial, all board turns to water. just for fun
             if newState.board[i][j] == 0:
-                for block in getBurntArea(i, j):
+                for block in self.getBurntArea(i, j):
                     if not (self.board[block[0]][block[1]] == 6 or \
                             self.board[block[0]][block[1]] == 7):
                         newState.board[block[0]][block[1]] = 1
-                for i in range(len(getBurntArea(i, j))):
+                for i in range(len(self.getBurntArea(i, j))):
                     newState.gg += 20
             else:
                 if i == 9 and j == 9:
@@ -355,10 +355,10 @@ class Game_State:
 
         elif actionSelected == 'Fasting forward 5 states':
             for i in range(5):
-                slowly_change(newState)
+                self.slowly_change(newState)
 
         if apply:#when temp rise to 1 and more, there's 1/3 chance of a forest fire that also burn down near blocks
-            slowly_change(newState)
+            self.slowly_change(newState)
 
         time.sleep(2.5)
         return newState
@@ -407,7 +407,7 @@ class Game_State:
                 j = randint(0, 9)
                 if self.board[i][j] == 0:
                     forest = True
-                    for block in getBurntArea(i, j):
+                    for block in self.getBurntArea(i, j):
                         self.board[block[0]][block[1]] = 1
             print('Due to high temperture, forest fire happened at row %d, column %d, and burned down near blocks.' \
                   % (i + 1, j + 1))

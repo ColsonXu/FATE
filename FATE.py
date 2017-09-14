@@ -135,11 +135,11 @@ class Game_State:
         :return str: The caption representing the current state.
     '''
     def __str__(self):
-        caption = "Polulation:", int(self.p), "Gold:", int(self.gold), \
-                  "Wood:", int(self.wood), "Food:", int(self.food), \
-                  "Living Quality:", int(self.lq), "ΔTemp.:", \
-                  '%.2f' %self.temp
-        return str(caption)  #return caption or the state???
+        caption = "\nPolulation: " + str(self.p) + "\nGold: " + str(self.gold) + \
+                  "\nWood: " + str(self.wood) + "\nFood: " + str(self.food) + \
+                  "\nLiving Quality: " + str(self.lq) + "\nΔTemp.: " + \
+                  str('%.2f' % self.temp)
+        return caption
 
     '''
         Compares two states and returns whether they are identical.

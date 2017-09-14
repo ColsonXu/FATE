@@ -275,18 +275,22 @@ class Game_State:
                     newState.selectedAction = action
             else:
                 newState.nextInput = 'action'
-                while True:
-                    try:
-                        i = int(input('Enter the row: >> ')) - 1
-                        j = int(input('Enter the column: >> ')) - 1
-                        if 0 <= i < 10 and 0 <= j < 10:
-                            newState = self.changeGrid(i, j, action)
-                            break
-                        else:
-                            print('Your input is out of the range. Please try again.')
-                    except Exception as e:
-                        # print(e)   # Debug Line
-                        print('Invalid input. Please try again.')
+                if action == 'Fasting forward 5 states':
+                    for i in range(5):
+                        newState.slowly_change()
+                else:
+                    while True:
+                        try:
+                            i = int(input('Enter the row: >> ')) - 1
+                            j = int(input('Enter the column: >> ')) - 1
+                            if 0 <= i < 10 and 0 <= j < 10:
+                                newState = self.changeGrid(i, j, action)
+                                break
+                            else:
+                                print('Your input is out of the range. Please try again.')
+                        except Exception as e:
+                            # print(e)   # Debug Line
+                            print('Invalid input. Please try again.')
 
         elif self.nextInput == 'row':
             newState.nextInput = 'col'

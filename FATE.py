@@ -26,7 +26,17 @@ PROBLEM_CREATION_DATE = "5-SEP-2017"
 # or the SVG graphics client.
 PROBLEM_DESC=\
 '''
-"WIP"
+"FATE is an environmental game. You are the governer of this area.
+Let your people live a high quality life so they don't rebel. Also, please
+remember to protect the environment from depletion.
+
+The cost and consequence of each operator is shown below:
+Burning trees \t no cost \t emit very large amount of CO2
+Cutting down trees \t costs 15 gold \t get 5 wood that can be used to build other buildings
+Mining \t cost 10 gold \t produce CO2 and earn 10 gold back each year
+Build cattle farm \t costs 5 gold and 5 wood \t get 100 food immediately, and get 20 food per year.
+Building power plant \t costs 10 gold \t emit CO2, requires one mining for each power plant
+Building house \t costs 5 gold \t can contain 150 people, three houses require one power plant
 '''
 #</METADATA>
 
@@ -73,7 +83,7 @@ def slowly_change(stateObject):
         stateObject.gg = 0
     stateObject.food -= 0.2 * stateObject.p
     stateObject.p = int(1.079 * stateObject.p)
-    stateObject.temp = 0.01 * stateObject.gg
+    stateObject.temp = 0.008 * stateObject.gg
     stateObject.gameYear += 1
 
     print('GameYear: %d' % stateObject.gameYear)
@@ -116,11 +126,12 @@ def slowly_change(stateObject):
                 stateObject.emptyDict[(i, j)] = 0
             elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] < 3:
                 stateObject.emptyDict[(i, j)] += 1
+            elif (i, j) in stateObject.emptyDict and stateObject.board[i][j] != 1:
+                del(stateObject.emptyDict[(i, j)])
             elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] == 3:
                 stateObject.board[i][j] = 0
                 del(stateObject.emptyDict[(i, j)])
-            elif (i, j) in stateObject.emptyDict and stateObject.board[i][j] != 1:
-                del(stateObject.emptyDict[(i, j)])
+            
 
 
     for i in range(10):
@@ -393,7 +404,7 @@ class Game_State:
                 electricity = False
             if newState.board[i][j] == 1 and newState.gold >= 5 and electricity == True:
                 newState.board[i][j] = 5
-                newState.gold -= 5 # capacity 1500, if full, LQ decrease 30 food and temp influence LQ
+                newState.gold -= 5 
             elif electricity == True:
                 print ("The space is not available or you don't have enough money")
                 apply = False
@@ -455,7 +466,7 @@ class Game_State:
     :param Game_State state: The game state evaluated.
 
     :return bool
-'''
+'''#change later
 def goal_test(state):
     if state.gameYear == 45:
         print('You achieved the impossible! You managed to survive 60 years with \

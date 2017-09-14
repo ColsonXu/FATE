@@ -355,10 +355,10 @@ class Game_State:
 
         elif actionSelected == 'Fasting forward 5 states':
             for i in range(5):
-                self.slowly_change(newState)
+                newState.slowly_change()
 
         if apply:#when temp rise to 1 and more, there's 1/3 chance of a forest fire that also burn down near blocks
-            self.slowly_change(newState)
+            newState.slowly_change()
 
         time.sleep(2.5)
         return newState

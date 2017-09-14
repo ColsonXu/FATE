@@ -37,6 +37,15 @@ Mining \t cost 10 gold \t produce CO2 and earn 10 gold back each year
 Build cattle farm \t costs 5 gold and 5 wood \t get 100 food immediately, and get 20 food per year.
 Building power plant \t costs 10 gold \t emit CO2, requires one mining for each power plant
 Building house \t costs 5 gold \t can contain 150 people, three houses require one power plant
+
+Other tips for you:
+1. When temperature gets too high, random forest fire happens. When temperature
+gets even higher, shore area gets flooded.
+2. Empty space grow back to forest after 3 years.
+3. Temperature, whether house has electricity and if houses are enough are factors that
+influence the living quality.
+
+Your goal is to hang in there for 45 years! Go ahead!
 '''
 #</METADATA>
 

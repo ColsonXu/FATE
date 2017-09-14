@@ -179,8 +179,14 @@ class Game_State:
         elif self.nextInput == 'action':
             # Filtrates all operators that are not a row/column selection operator
             # or a dummy operator.
-            if not 'Select' in action and action != 'Dummy operator' and not \
-            'I am' in action:
+            if 'forest' in action and len(list(filter(lambda row: 0 in row, \
+            self.board))) > 0:
+                return True
+            elif action in ['Build cattle farm', 'Mine coal', 'Build power plant',\
+            'Build house'] and len(list(filter(lambda row: 1 in row, \
+            self.board))) > 0:
+                return True
+            elif action == 'Fasting forward 5 states':
                 return True
             return False
         elif self.nextInput == 'row':

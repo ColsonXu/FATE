@@ -44,6 +44,8 @@ gets even higher, shore area gets flooded.
 2. Empty space grow back to forest after 3 years.
 3. Temperature, whether house has electricity and if houses are enough are factors that
 influence the living quality.
+4. Mining gives you money! So try mine first!
+5. Burning down too much trees causes temperature rises very fast! Don't do that!
 
 Your goal is to hang in there for 45 years! Go ahead!
 '''

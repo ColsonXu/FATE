@@ -3,29 +3,8 @@ from random import randint
 import time
 
 '''
-Missionaries.py
-("Missionaries and Cannibals" problem)
-A SOLUZION problem formulation.
-The XML-like tags used here may not be necessary, in the end.
-But for now, they serve to identify key sections of this
-problem formulation. It is important that COMMON_CODE come
-before all the other sections (except METADATA), including COMMON_DATA.
+FATE.py
 
-This version includes a check for the use of the Tk graphics client.
-If this client is being used, then it loads the visualization module:
-Missionaries_Array_VIS_FOR_TK.py.
-'''
-#<METADATA>
-SOLUZION_VERSION = "1.0"
-PROBLEM_NAME = "FATE"
-PROBLEM_VERSION = "0.1"
-PROBLEM_AUTHORS = ['Colson Xu', 'Leo Liao', 'Yujia Lin', 'Yuxuan Lu']
-PROBLEM_CREATION_DATE = "5-SEP-2017"
-
-# The following field is mainly for the human solver, via either the Text_SOLUZION_Client.
-# or the SVG graphics client.
-PROBLEM_DESC=\
-'''
 "FATE is an environmental game. You are the governer of this area.
 Let your people live a high quality life so they don't rebel. Also, please
 remember to protect the environment from depletion.
@@ -49,6 +28,16 @@ influence the living quality.
 
 Your goal is to hang in there for 45 years! Go ahead!
 '''
+#<METADATA>
+SOLUZION_VERSION = "1.0"
+PROBLEM_NAME = "FATE"
+PROBLEM_VERSION = "0.1"
+PROBLEM_AUTHORS = ['Colson Xu', 'Leo Liao', 'Yujia Lin', 'Yuxuan Lu']
+PROBLEM_CREATION_DATE = "5-SEP-2017"
+
+# The following field is mainly for the human solver, via either the Text_SOLUZION_Client.
+# or the SVG graphics client.
+PROBLEM_DESC=\
 #</METADATA>
 
 #<COMMON_DATA>
@@ -71,7 +60,16 @@ MUTABLE_STATES = [0, 1]
 def copy_state(s):
     return s.__copy__()
 
-def op_blocks(i, j, state):
+'''
+    Returns blocks burnt when a tree burning event is initiated.
+
+    :param int            i: Index of row of the fire event's center.
+    :param int            j: Index of column of the fire event's center.
+    :param Game_State state: Current game state.
+
+    :return list: A list containing the given block plus all adjacent blocks.
+'''
+def getBurntArea(i, j, state):
     blocks = [[i, j]]
     if i > 0:
         blocks.append([i - 1, j])
@@ -86,91 +84,98 @@ def op_blocks(i, j, state):
             del blocks[blocks.index(block)]
     return blocks
 
-def slowly_change(stateObject):
-    if stateObject.gg < 0:
-        stateObject.gg = 0
-    stateObject.food -= 0.2 * stateObject.p
-    stateObject.p = int(1.079 * stateObject.p)
-    stateObject.temp = 0.008 * stateObject.gg
-    stateObject.gameYear += 1
+'''
+    The following function is called everytime after one change of state.
+    It calculates and refreshes state variables and triggers natural events,
+    such as natural wildfire activity, flood, and tree recovery.
+
+    :param Game_State state: The game state processed.
+'''
+def slowly_change(state):
+    if state.gg < 0:
+        state.gg = 0
+    state.food -= 0.2 * state.p
+    state.p = int(1.079 * state.p)
+    state.temp = 0.008 * state.gg
+    state.gameYear += 1
 
     # Random Wild Fire when Delta T > 1 (1/3 properbility)
-    if stateObject.temp >= 1 and randint(1, 3) == 1:
+    if state.temp >= 1 and randint(1, 3) == 1:
         forest = False
         while not forest:
             i = randint(0, 9)
             j = randint(0, 9)
-            if stateObject.board[i][j] == 0:
+            if state.board[i][j] == 0:
                 forest = True
-                for block in op_blocks(i, j, stateObject):
-                    stateObject.board[block[0]][block[1]] = 1
+                for block in getBurntArea(i, j, state):
+                    state.board[block[0]][block[1]] = 1
         print('Due to high temperture, forest fire happened at row %d, column %d, and burned down near blocks.' \
               % (i + 1, j + 1))
 
     # Flood
-    if stateObject.temp >= 1.5:
+    if state.temp >= 1.5:
         print('Sea level rising caused shore area being flooded.')
         for i in range(10):
-            if (stateObject.board[i].count(7) == 9 and stateObject.board[i][9] == 6) or \
-            (stateObject.board[i].count(7) == 10):
+            if (state.board[i].count(7) == 9 and state.board[i][9] == 6) or \
+            (state.board[i].count(7) == 10):
                 nextRow = i - 1
                 break
         change_list = []
         while True:
             index = randint(0, 9)
-            if stateObject.board[nextRow][index] != 7 and len(change_list) < 4:
+            if state.board[nextRow][index] != 7 and len(change_list) < 4:
                 change_list.append(index)
-            if len(change_list) == 4 or len(change_list) == (10 - stateObject.board[nextRow].count(7)):
+            if len(change_list) == 4 or len(change_list) == (10 - state.board[nextRow].count(7)):
                 break
         for i in range(4):
             try:
-                stateObject.board[nextRow][change_list.pop()] = 7
+                state.board[nextRow][change_list.pop()] = 7
             except:
                 break
 
     # Empty space grow back to forest
     for i in range(10):
         for j in range(10):
-            if stateObject.board[i][j] == 1:
-                if (i, j) not in stateObject.emptyDict and stateObject.board[i][j] == 1:
-                    stateObject.emptyDict[(i, j)] = 0
-                elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] < 5:
-                    stateObject.emptyDict[(i, j)] += 1
-                elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] == 5:
-                    stateObject.board[i][j] = 0
-                    del stateObject.emptyDict[(i, j)]
-                elif (i, j) in stateObject.emptyDict and stateObject.board[i][j] != 1:
-                    del stateObject.emptyDict[(i, j)]
+            if state.board[i][j] == 1:
+                if (i, j) not in state.emptyDict and state.board[i][j] == 1:
+                    state.emptyDict[(i, j)] = 0
+                elif (i, j) in state.emptyDict and state.emptyDict[(i, j)] < 5:
+                    state.emptyDict[(i, j)] += 1
+                elif (i, j) in state.emptyDict and state.emptyDict[(i, j)] == 5:
+                    state.board[i][j] = 0
+                    del state.emptyDict[(i, j)]
+                elif (i, j) in state.emptyDict and state.board[i][j] != 1:
+                    del state.emptyDict[(i, j)]
 
     # Count every facilities on the game board for variable change
     for i in range(10):
-        stateObject.gg += 15 * stateObject.board[i].count(4)
-        stateObject.gg += 10 * stateObject.board[i].count(2)
-        stateObject.gg -= 0.5 * stateObject.board[i].count(0)
-        stateObject.gold += 10 * stateObject.board[i].count(3)
-        stateObject.food += 20 * stateObject.board[i].count(2)
+        state.gg += 15 * state.board[i].count(4)
+        state.gg += 10 * state.board[i].count(2)
+        state.gg -= 0.5 * state.board[i].count(0)
+        state.gold += 10 * state.board[i].count(3)
+        state.food += 20 * state.board[i].count(2)
 
     # LQ
     electricity = 0
     house = 0
     for i in range(10):
         for j in range(10):
-            if stateObject.board[i][j] == 4:
+            if state.board[i][j] == 4:
                 electricity += 1
-            if stateObject.board[i][j] == 5:
+            if state.board[i][j] == 5:
                 house += 1
     if house > electricity * 3:
-        stateObject.lq -= 10
-    if stateObject.temp >= 1.5:
-        stateObject.lq -= 3
-    if stateObject.p >= 150 * house and stateObject.p >= 350:
-        stateObject.lq -= 8
-    if house <= electricity * 3 and stateObject.temp < 1.5 and stateObject.p < 150 * house:
-        stateObject.lq += 2
-        if stateObject.lq > 100:
-            stateObject.lq = 100
+        state.lq -= 10
+    if state.temp >= 1.5:
+        state.lq -= 3
+    if state.p >= 150 * house and state.p >= 350:
+        state.lq -= 8
+    if house <= electricity * 3 and state.temp < 1.5 and state.p < 150 * house:
+        state.lq += 2
+        if state.lq > 100:
+            state.lq = 100
 
-    print('GameYear: %d' % stateObject.gameYear)
+    print('GameYear: %d' % state.gameYear)
 
 
 '''
@@ -386,11 +391,11 @@ class Game_State:
         elif actionSelected == 'Burn down forest':
             # if you burn the glacial, all board turns to water. just for fun
             if newState.board[i][j] == 0:
-                for block in op_blocks(i, j, self):
+                for block in getBurntArea(i, j, self):
                     if not (self.board[block[0]][block[1]] == 6 or \
                             self.board[block[0]][block[1]] == 7):
                         newState.board[block[0]][block[1]] = 1
-                for i in range(len(op_blocks(i, j, self))):
+                for i in range(len(getBurntArea(i, j, self))):
                     newState.gg += 20
             else:
                 if i == 9 and j == 9:
@@ -419,7 +424,7 @@ class Game_State:
                 electricity = False
             if newState.board[i][j] == 1 and newState.gold >= 5 and electricity == True:
                 newState.board[i][j] = 5
-                newState.gold -= 5 
+                newState.gold -= 5
             elif electricity == True:
                 print ("The space is not available or you don't have enough money")
                 apply = False
@@ -500,14 +505,6 @@ def goal_test(state):
             print('The temperature is too high! Your land become unlivable.')
             return True
         return False
-
-
-
-'''
-    :param mixed s
-
-    :return str
-'''
 
 class Operator:
     def __init__(self, name, precond, state_transf):

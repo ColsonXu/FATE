@@ -182,19 +182,65 @@ class Game_State:
         elif self.nextInput == 'action':
             # Filtrates all operators that are not a row/column selection operator
             # or a dummy operator.
-            if not 'Select' in action and action != 'Dummy operator' and not \
-            'I am' in action:
+            if 'forest' in action and len(list(filter(lambda row: 0 in row, \
+            self.board))) > 0:
+                return True
+            elif action in ['Build cattle farm', 'Mine coal', 'Build power plant',\
+            'Build house'] and len(list(filter(lambda row: 1 in row, \
+            self.board))) > 0:
+                return True
+            elif action == 'Fasting forward 5 states':
                 return True
             return False
         elif self.nextInput == 'row':
             '''Filtrates all operators that are a row selection operator.'''
             if 'Select row' in action:
-                return True
+                actionSelected = self.selectedAction
+                '''Converts row selection to index of the list for the board.'''
+                row = int(action[-1])
+                if row == 0:
+                    i = 9
+                else:
+                    i = row - 1
+                '''Loops through all blocks in the row and sees if there is any
+                block where the action selected is applicable.'''
+                for j in range(10):
+                    blockState = self.board[i][j]
+                    if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
+                        if blockState == 0 and actionSelected in \
+                        ['Burn down forest', 'Cut down forest']:
+                            return True
+                        elif blockState == 1 and actionSelected in \
+                        ['Build cattle farm', 'Mine coal', 'Build power plant',
+                        'Build house']:
+                            return True
             return False
         elif self.nextInput == 'col':
             '''Filtrates all operators that are a column selection operator.'''
             if 'Select column' in action:
-                return True
+                actionSelected = self.selectedAction
+                i = self.selectedRow
+                '''Converts column selection to index of the second-level list for
+                the board.'''
+                col = int(action[-1])
+                if col == 0:
+                    j = 9
+                else:
+                    j = col - 1
+                blockState = self.board[i][j]
+                '''Evaluates all blocks in the row selected and sees if there is any
+                block where the action selected is applicable.'''
+                if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
+                    blockState = self.board[i][j]
+                    if len(list(filter(lambda x: blockState == x, MUTABLE_STATES))):
+                        if blockState == 0 and actionSelected in \
+                        ['Burn down forest', 'Cut down forest']:
+                            return True
+                        elif blockState == 1 and actionSelected in \
+                        ['Build cattle farm', 'Mine coal', 'Build house']:
+                            return True
+                        elif blockState == 3 and actionSelected == 'Build power plant':
+                            return True
             return False
 
     '''
@@ -224,8 +270,12 @@ class Game_State:
 
         elif self.nextInput == 'action':
             if self.playerType == 'bot':
-                newState.nextInput = 'row'
-                newState.selectedAction = action
+                if action == 'Fasting forward 5 states':
+                    for i in range(5):
+                        newState.slowly_change()
+                else:
+                    newState.nextInput = 'row'
+                    newState.selectedAction = action
             else:
                 newState.nextInput = 'action'
                 while True:
@@ -261,6 +311,7 @@ class Game_State:
                 j = 9
             else:
                 j = colSelected - 1
+
             newState = self.changeGrid(i, j, actionSelected)
             newState.nextInput = 'action'
 
@@ -368,10 +419,6 @@ class Game_State:
             elif mine == True:
                 print("You need 15 gold and 5 wood to build a powerplant. And you can only build on empty space.")
                 apply = False
-
-        elif actionSelected == 'Fasting forward 5 states':
-            for i in range(5):
-                newState.slowly_change()
 
         if apply: # when temp rise to 1 and more, there's 1/3 chance of a forest fire that also burn down near blocks
             newState.slowly_change()

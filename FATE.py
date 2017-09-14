@@ -482,10 +482,8 @@ actions = [ 'Burn down forest',
             'Mine coal',
             'Build power plant',
             'Build house',
-            'Fasting forward 5 states',
-            'I am a human',
-            'I am not a human'] + \
-            ['Dummy operator' for i in range(2)] + \
+            'Fasting forward 5 states'] + \
+            ['Dummy operator' for i in range(4)] + \
             ['Select %s %d' %(string, i) for string in ['row', 'column'] for i \
             in range(1, 11)]
 '''Dummy operator allows the player to enter 11 rather than 6 for row

@@ -135,15 +135,11 @@ class Game_State:
         :return str: The caption representing the current state.
     '''
     def __str__(self):
-        caption = "Polulation:", int(self.p),\
-                  "Gold:", int(self.gold),\
-                  "Wood:", int(self.wood),\
-                  "Food:", int(self.food),\
-                  "Living Quality:", int(self.lq),\
-                  "ΔTemp.:", "%.2f" % self.temp,\
-                  "Year:", self.gameYear
-
-        return str(caption)  #return caption or the state???
+        caption = "\nPolulation: " + str(self.p) + "\nGold: " + str(self.gold) + \
+                  "\nWood: " + str(self.wood) + "\nFood: " + str(self.food) + \
+                  "\nLiving Quality: " + str(self.lq) + "\nΔTemp.: " + \
+                  str('%.2f' % self.temp)
+        return caption
 
     '''
         Compares two states and returns whether they are identical.
@@ -162,6 +158,9 @@ class Game_State:
         else:
             return True
 
+    '''
+        :return int
+    '''
     def __hash__(self):
         return (str(self)).__hash__()
 
@@ -200,7 +199,7 @@ class Game_State:
 
         :param str action: The operator executed.
 
-        :return Game_State: A new game state produced by the action.
+        :return Game_State: Resultant game state.
     '''
     def takeAction(self, action):
         newState = self.__copy__()
@@ -264,6 +263,15 @@ class Game_State:
 
         return newState
 
+    '''
+        Mutates state of a block and makes other changes to variables.
+
+        :param int i             : Index of row of the block.
+        :param int j             : Index of column of the block.
+        :param str actionSelected: The action that the user selected.
+
+        :return Game_State: Resultant game state.
+    '''
     def changeGrid(self, i, j, actionSelected):
         newState = self.__copy__()
         apply = True

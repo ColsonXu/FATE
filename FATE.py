@@ -335,7 +335,7 @@ class Game_State:
                 newState.gold -= 5
                 newState.food += 100
             else:
-                message = "You don't have 5 wood and 5 gold or the selected square is not empty"
+                print("You don't have 5 wood and 5 gold or the selected square is not empty")
                 apply = False
 
         elif actionSelected == 'Burn down forest':
@@ -354,7 +354,7 @@ class Game_State:
                             newState.board[x][y] = 7
                     newState.lq = 0
                 else:
-                    message = "You can only burn down forest"
+                    print("You can only burn down forest")
                     apply = False
 
 
@@ -369,14 +369,14 @@ class Game_State:
                         house += 1
             electricity = True
             if power * 3 <= house:
-                message = "You need one power plant for every three house"
+                print("You need one power plant for every three house")
                 apply = False
                 electricity = False
             if newState.board[i][j] == 1 and newState.gold >= 5 and electricity == True:
                 newState.board[i][j] = 5
                 newState.gold -= 5
             elif electricity == True:
-                message = "The space is not available or you don't have enough money"
+                print("The space is not available or you don't have enough money")
                 apply = False
         elif actionSelected == 'Cut down forest':
             if newState.board[i][j] == 0 and newState.gold >= 15:
@@ -384,7 +384,7 @@ class Game_State:
                 newState.wood += 5
                 newState.gold -= 15
             else:
-                message = "You can only cut down forest. At least 15 gold is needed"
+                print("You can only cut down forest. At least 15 gold is needed")
                 apply = False
 
         elif actionSelected == 'Mine coal':
@@ -393,7 +393,7 @@ class Game_State:
                 newState.gold -= 10
                 newState.gg += 15
             else:
-                message = "You can only mine on empty spaces, or you don't have 10 gold."
+                print("You can only mine on empty spaces, or you don't have 10 gold.")
                 apply = False
 
         elif actionSelected == 'Build power plant':
@@ -407,17 +407,17 @@ class Game_State:
                         powerplant += 1
             mine = True
             if powerplant >= mining:
-                message = "One mine required for each powerplant"
+                print("One mine required for each powerplant")
                 mine = False
             if newState.wood >= 5 and newState.gold >= 15 and newState.board[i][j] == 1 and mine == True:
                 newState.board[i][j] = 4
                 newState.wood -= 5
                 newState.gold -= 15
             elif mine == True:
-                message = "You need 15 gold and 5 wood to build a powerplant. And you can only build on empty space."
+                print("You need 15 gold and 5 wood to build a powerplant. And you can only build on empty space.")
                 apply = False
 
-        if apply:#when temp rise to 1 and more, there's 1/3 chance of a forest fire that also burn down near blocks
+        if apply: # when temp rise to 1 and more, there's 1/3 chance of a forest fire that also burn down near blocks
             newState.slowly_change()
 
         return newState
@@ -468,12 +468,12 @@ class Game_State:
                     forest = True
                     for block in self.getBurntArea(i, j):
                         self.board[block[0]][block[1]] = 1
-            message = "Due to high temperture, forest fire happened at row " + str(i + 1) + \
-                      ", column " + str(j + 1) + ", and burned down nearby blocks."
+            print("Due to high temperture, forest fire happened at row " + str(i + 1) + \
+                      ", column " + str(j + 1) + ", and burned down nearby blocks.")
 
         # Flood
         if self.temp >= 1.5:
-            message = "Sea level rising caused shore area being flooded."
+            print("Sea level rising caused shore area being flooded.")
             for i in range(10):
                 if (self.board[i].count(7) == 9 and self.board[i][9] == 6) or \
                 (self.board[i].count(7) == 10):

@@ -255,8 +255,12 @@ class Game_State:
         '''
 
         if self.nextInput == 'action':
-            newState.nextInput = 'row'
-            newState.selectedAction = action
+            if action == 'Fasting forward 5 states':
+                for i in range(5):
+                    newState.slowly_change()
+            else:
+                newState.nextInput = 'row'
+                newState.selectedAction = action
 
         elif self.nextInput == 'row':
             newState.nextInput = 'col'
@@ -278,6 +282,7 @@ class Game_State:
                 j = 9
             else:
                 j = colSelected - 1
+
             newState = self.changeGrid(i, j, actionSelected)
             newState.nextInput = 'action'
 
@@ -376,10 +381,6 @@ class Game_State:
             elif mine == True:
                 print ("You need 15 gold and 5 wood to build a powerplant. And you can only build on empty space.")
                 apply = False
-
-        elif actionSelected == 'Fasting forward 5 states':
-            for i in range(5):
-                newState.slowly_change()
 
         if apply:#when temp rise to 1 and more, there's 1/3 chance of a forest fire that also burn down near blocks
             newState.slowly_change()

@@ -137,9 +137,9 @@ def slowly_change(stateObject):
             if stateObject.board[i][j] == 1:
                 if (i, j) not in stateObject.emptyDict and stateObject.board[i][j] == 1:
                     stateObject.emptyDict[(i, j)] = 0
-                elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] < 3:
+                elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] < 5:
                     stateObject.emptyDict[(i, j)] += 1
-                elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] == 3:
+                elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] == 5:
                     stateObject.board[i][j] = 0
                     del stateObject.emptyDict[(i, j)]
                 elif (i, j) in stateObject.emptyDict and stateObject.board[i][j] != 1:
@@ -286,8 +286,8 @@ class Game_State:
                 return True
             return False
         elif self.nextInput == 'action':
-            '''Filtrates all operators that are not a row/column selection operator
-            or a dummy operator.'''
+            # Filtrates all operators that are not a row/column selection operator
+            # or a dummy operator.
             if not 'Select' in action and action != 'Dummy operator' and not \
             'I am' in action:
                 return True
@@ -313,10 +313,12 @@ class Game_State:
     def takeAction(self, action):
         newState = self.__copy__()
 
-        '''After the player selects an operator, FATE will change the pointer
+        '''
+        After the player selects an operator, FATE will change the pointer
         storing type of the next input the player is going to make, `nextInput`, to
         the next value it ought to have.
-        The order of entering those operators are action, row, and column.'''
+        The order of entering those operators are action, row, and column.
+        '''
 
         if self.nextInput == 'player':
             newState.nextInput = 'action'
@@ -346,7 +348,8 @@ class Game_State:
 
         elif self.nextInput == 'row':
             newState.nextInput = 'col'
-            '''Converts row selection to index of the list for the board.'''
+
+            # Converts row selection to index of the list for the board.
             rowSelected = int(action[-1])
             if rowSelected == 0:
                 newState.selectedRow = 9
@@ -356,8 +359,8 @@ class Game_State:
         elif self.nextInput == 'col':
             actionSelected = self.selectedAction
             i = self.selectedRow
-            '''Converts column selection to index of the second-level list for
-            the board.'''
+
+            # Converts column selection to index of the second-level list for the board.
             colSelected = int(action[-1])
             if colSelected == 0:
                 j = 9
@@ -372,7 +375,7 @@ class Game_State:
         newState = self.__copy__()
         apply = True
 
-        '''Changes state of the block where the player chooses.'''
+        # Changes state of the block where the player chooses.
         if actionSelected == 'Build cattle farm':
             if newState.wood >= 5 and newState.gold >= 5 and newState.board[i][j] == 1:
                 newState.board[i][j] = 2
@@ -384,7 +387,7 @@ class Game_State:
                 apply = False
 
         elif actionSelected == 'Burn down forest':
-            '''if you burn the glacial, all board turns to water. just for fun'''
+            # if you burn the glacial, all board turns to water. just for fun
             if newState.board[i][j] == 0:
                 for block in op_blocks(i, j, self):
                     if not (self.board[block[0]][block[1]] == 6 or \
@@ -481,7 +484,9 @@ class Game_State:
     :param Game_State state: The game state evaluated.
 
     :return bool
-'''#change later
+'''
+
+# change later
 def goal_test(state):
     if state.gameYear == 45:
         print('You achieved the impossible! You managed to survive 60 years with \
@@ -541,9 +546,11 @@ actions = [ 'Burn down forest',
             ['Dummy operator' for i in range(2)] + \
             ['Select %s %d' %(string, i) for string in ['row', 'column'] for i \
             in range(1, 11)]
-'''Dummy operator allows the player to enter 11 rather than 6 for row
+'''
+Dummy operator allows the player to enter 11 rather than 6 for row
 1, enters 12 rather than 7 for row 2, etc., so the row and column
-selection process can be more user-friendly.'''
+selection process can be more user-friendly.
+'''
 
 OPERATORS = [Operator(
     action,
@@ -564,7 +571,7 @@ render_state = None
 
 def use_BRIFL_SVG():
     global render_state
-    #from    Missionaries_SVG_VIS_FOR_BRIFL import render_state as rs
-    #render_state = rs
+    # from Missionaries_SVG_VIS_FOR_BRIFL import render_state as rs
+    # render_state = rs
     from Missionaries_SVG_VIS_FOR_BRIFL import render_state
 #</STATE_VIS>

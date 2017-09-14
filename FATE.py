@@ -112,13 +112,16 @@ def slowly_change(stateObject):
 
     for i in range(10):
         for j in range(10):
-            if (i, j) not in newState.emptyDict and newState.board[i][j] == 1:
-                newState.emptyDict[(i, j)] = 0
-            elif (i, j) in newState.emptyDict and newState.emptyDict[(i, j)] < 3:
-                newState.emptyDict[(i, j)] += 1
-            elif (i, j) in newState.emptyDict and newState.emptyDict[(i, j)] >= 3:
-                newState.board[i][j] = 0
-                del(newState.emptyDict[(i, j)])
+            if (i, j) not in stateObject.emptyDict and stateObject.board[i][j] == 1:
+                stateObject.emptyDict[(i, j)] = 0
+            elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] < 3:
+                stateObject.emptyDict[(i, j)] += 1
+            elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] == 3:
+                stateObject.board[i][j] = 0
+                del(stateObject.emptyDict[(i, j)])
+            elif (i, j) in stateObject.emptyDict and stateObject.board[i][j] != 1:
+                del(stateObject.emptyDict[(i, j)])
+
 
     for i in range(10):
         stateObject.gg += 15 * stateObject.board[i].count(4)

@@ -71,9 +71,6 @@ MUTABLE_STATES = [0, 1]
 def copy_state(s):
     return s.__copy__()
 
-def describe_state(stateObject):
-    return str(stateObject)
-
 def op_blocks(i, j, state):
     blocks = [[i, j]]
     if i > 0:

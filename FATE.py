@@ -371,6 +371,7 @@ class Game_State:
                     for x in range(10):
                         for y in range(10):
                             newState.board[x][y] = 7
+                    newState.lq = 0
                 else:
                     print('You can only burn down forest')
                     apply = False

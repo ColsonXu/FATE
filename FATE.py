@@ -26,7 +26,26 @@ PROBLEM_CREATION_DATE = "5-SEP-2017"
 # or the SVG graphics client.
 PROBLEM_DESC=\
 '''
-"WIP"
+"FATE is an environmental game. You are the governer of this area.
+Let your people live a high quality life so they don't rebel. Also, please
+remember to protect the environment from depletion.
+
+The cost and consequence of each operator is shown below:
+Burning trees \t no cost \t emit very large amount of CO2
+Cutting down trees \t costs 15 gold \t get 5 wood that can be used to build other buildings
+Mining \t cost 10 gold \t produce CO2 and earn 10 gold back each year
+Build cattle farm \t costs 5 gold and 5 wood \t get 100 food immediately, and get 20 food per year.
+Building power plant \t costs 10 gold \t emit CO2, requires one mining for each power plant
+Building house \t costs 5 gold \t can contain 150 people, three houses require one power plant
+
+Other tips for you:
+1. When temperature gets too high, random forest fire happens. When temperature
+gets even higher, shore area gets flooded.
+2. Empty space grow back to forest after 3 years.
+3. Temperature, whether house has electricity and if houses are enough are factors that
+influence the living quality.
+
+Your goal is to hang in there for 45 years! Go ahead!
 '''
 #</METADATA>
 
@@ -398,7 +417,7 @@ class Game_State:
                 electricity = False
             if newState.board[i][j] == 1 and newState.gold >= 5 and electricity == True:
                 newState.board[i][j] = 5
-                newState.gold -= 5 # capacity 1500, if full, LQ decrease 30 food and temp influence LQ
+                newState.gold -= 5 
             elif electricity == True:
                 print ("The space is not available or you don't have enough money")
                 apply = False
@@ -460,7 +479,7 @@ class Game_State:
     :param Game_State state: The game state evaluated.
 
     :return bool
-'''
+'''#change later
 def goal_test(state):
     if state.gameYear == 45:
         print('You achieved the impossible! You managed to survive 60 years with \

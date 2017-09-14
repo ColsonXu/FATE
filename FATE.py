@@ -61,124 +61,6 @@ def copy_state(s):
     return s.__copy__()
 
 '''
-    Returns blocks burnt when a tree burning event is initiated.
-
-    :param int        i:     Index of row of the fire event's center.
-    :param int        j:     Index of column of the fire event's center.
-    :param Game_State state: Current game state.
-
-    :return list: A list containing the given block plus all adjacent blocks.
-'''
-def getBurntArea(i, j, state):
-    blocks = [[i, j]]
-    if i > 0:
-        blocks.append([i - 1, j])
-    if i < 9:
-        blocks.append([i + 1, j])
-    if j > 0:
-        blocks.append([i, j - 1])
-    if j < 9:
-        blocks.append([i, j + 1])
-    for block in blocks:
-        if state.board[block[0]][block[1]] != 0:
-            del blocks[blocks.index(block)]
-    return blocks
-
-'''
-    The following function is called everytime after one change of state.
-    It calculates and refreshes state variables and triggers natural events,
-    such as natural wildfire activity, flood, and tree recovery.
-
-    :param Game_State state: The game state processed.
-'''
-def slowly_change(state):
-    if state.gg < 0:
-        state.gg = 0
-    state.food -= 0.2 * state.p
-    state.p = int(1.079 * state.p)
-    state.temp = 0.008 * state.gg
-    state.gameYear += 1
-
-    # Random Wild Fire when Delta T > 1 (1/3 properbility)
-    if state.temp >= 1 and randint(1, 3) == 1:
-        forest = False
-        while not forest:
-            i = randint(0, 9)
-            j = randint(0, 9)
-            if state.board[i][j] == 0:
-                forest = True
-                for block in getBurntArea(i, j, state):
-                    state.board[block[0]][block[1]] = 1
-        print('Due to high temperture, forest fire happened at row %d, column %d, and burned down near blocks.' \
-              % (i + 1, j + 1))
-
-    # Flood
-    if state.temp >= 1.5:
-        print('Sea level rising caused shore area being flooded.')
-        for i in range(10):
-            if (state.board[i].count(7) == 9 and state.board[i][9] == 6) or \
-            (state.board[i].count(7) == 10):
-                nextRow = i - 1
-                break
-        change_list = []
-        while True:
-            index = randint(0, 9)
-            if state.board[nextRow][index] != 7 and len(change_list) < 4:
-                change_list.append(index)
-            if len(change_list) == 4 or len(change_list) == (10 - state.board[nextRow].count(7)):
-                break
-        for i in range(4):
-            try:
-                state.board[nextRow][change_list.pop()] = 7
-            except:
-                break
-
-    # Empty space grow back to forest
-    for i in range(10):
-        for j in range(10):
-            if state.board[i][j] == 1:
-                if (i, j) not in state.emptyDict and state.board[i][j] == 1:
-                    state.emptyDict[(i, j)] = 0
-                elif (i, j) in state.emptyDict and state.emptyDict[(i, j)] < 5:
-                    state.emptyDict[(i, j)] += 1
-                elif (i, j) in state.emptyDict and state.emptyDict[(i, j)] == 5:
-                    state.board[i][j] = 0
-                    del state.emptyDict[(i, j)]
-                elif (i, j) in state.emptyDict and state.board[i][j] != 1:
-                    del state.emptyDict[(i, j)]
-
-    # Count every facilities on the game board for variable change
-    for i in range(10):
-        state.gg += 15 * state.board[i].count(4)
-        state.gg += 10 * state.board[i].count(2)
-        state.gg -= 0.5 * state.board[i].count(0)
-        state.gold += 10 * state.board[i].count(3)
-        state.food += 20 * state.board[i].count(2)
-
-    # LQ
-    electricity = 0
-    house = 0
-    for i in range(10):
-        for j in range(10):
-            if state.board[i][j] == 4:
-                electricity += 1
-            if state.board[i][j] == 5:
-                house += 1
-    if house > electricity * 3:
-        state.lq -= 10
-    if state.temp >= 1.5:
-        state.lq -= 3
-    if state.p >= 150 * house and state.p >= 350:
-        state.lq -= 8
-    if house <= electricity * 3 and state.temp < 1.5 and state.p < 150 * house:
-        state.lq += 2
-        if state.lq > 100:
-            state.lq = 100
-
-    print('GameYear: %d' % state.gameYear)
-
-
-'''
     Block Code Index:
 
     0: Plants
@@ -391,11 +273,11 @@ class Game_State:
         elif actionSelected == 'Burn down forest':
             # if you burn the glacial, all board turns to water. just for fun
             if newState.board[i][j] == 0:
-                for block in getBurntArea(i, j, self):
+                for block in getBurntArea(i, j):
                     if not (self.board[block[0]][block[1]] == 6 or \
                             self.board[block[0]][block[1]] == 7):
                         newState.board[block[0]][block[1]] = 1
-                for i in range(len(getBurntArea(i, j, self))):
+                for i in range(len(getBurntArea(i, j))):
                     newState.gg += 20
             else:
                 if i == 9 and j == 9:
@@ -476,6 +358,121 @@ class Game_State:
 
         time.sleep(2.5)
         return newState
+
+    '''
+        Returns blocks burnt when a tree burning event is initiated.
+
+        :param int i: Index of row of the fire event's center.
+        :param int j: Index of column of the fire event's center.
+
+        :return list: A list containing the given block plus all adjacent blocks.
+    '''
+    def getBurntArea(self, i, j):
+        blocks = [[i, j]]
+        if i > 0:
+            blocks.append([i - 1, j])
+        if i < 9:
+            blocks.append([i + 1, j])
+        if j > 0:
+            blocks.append([i, j - 1])
+        if j < 9:
+            blocks.append([i, j + 1])
+        for block in blocks:
+            if self.board[block[0]][block[1]] != 0:
+                del blocks[blocks.index(block)]
+        return blocks
+
+    '''
+        The following function is called everytime after one change of state.
+        It calculates and refreshes state variables and triggers natural events,
+        such as natural wildfire activity, flood, and tree recovery.
+    '''
+    def slowly_change(self):
+        if self.gg < 0:
+            self.gg = 0
+        self.food -= 0.2 * self.p
+        self.p = int(1.079 * self.p)
+        self.temp = 0.008 * self.gg
+        self.gameYear += 1
+
+        # Random Wild Fire when Delta T > 1 (1/3 properbility)
+        if self.temp >= 1 and randint(1, 3) == 1:
+            forest = False
+            while not forest:
+                i = randint(0, 9)
+                j = randint(0, 9)
+                if self.board[i][j] == 0:
+                    forest = True
+                    for block in getBurntArea(i, j):
+                        self.board[block[0]][block[1]] = 1
+            print('Due to high temperture, forest fire happened at row %d, column %d, and burned down near blocks.' \
+                  % (i + 1, j + 1))
+
+        # Flood
+        if self.temp >= 1.5:
+            print('Sea level rising caused shore area being flooded.')
+            for i in range(10):
+                if (self.board[i].count(7) == 9 and self.board[i][9] == 6) or \
+                (self.board[i].count(7) == 10):
+                    nextRow = i - 1
+                    break
+            change_list = []
+            while True:
+                index = randint(0, 9)
+                if self.board[nextRow][index] != 7 and len(change_list) < 4:
+                    change_list.append(index)
+                if len(change_list) == 4 or len(change_list) == (10 - self.board[nextRow].count(7)):
+                    break
+            for i in range(4):
+                try:
+                    self.board[nextRow][change_list.pop()] = 7
+                except:
+                    break
+
+        # Empty space grow back to forest
+        for i in range(10):
+            for j in range(10):
+                if self.board[i][j] == 1:
+                    if (i, j) not in self.emptyDict and self.board[i][j] == 1:
+                        self.emptyDict[(i, j)] = 0
+                    elif (i, j) in self.emptyDict and self.emptyDict[(i, j)] < 5:
+                        self.emptyDict[(i, j)] += 1
+                    elif (i, j) in self.emptyDict and self.emptyDict[(i, j)] == 5:
+                        self.board[i][j] = 0
+                        del self.emptyDict[(i, j)]
+                    elif (i, j) in self.emptyDict and self.board[i][j] != 1:
+                        del self.emptyDict[(i, j)]
+
+        # Count every facilities on the game board for variable change
+        for i in range(10):
+            self.gg += 15 * self.board[i].count(4)
+            self.gg += 10 * self.board[i].count(2)
+            self.gg -= 0.5 * self.board[i].count(0)
+            self.gold += 10 * self.board[i].count(3)
+            self.food += 20 * self.board[i].count(2)
+
+        # LQ
+        electricity = 0
+        house = 0
+        for i in range(10):
+            for j in range(10):
+                if self.board[i][j] == 4:
+                    electricity += 1
+                if self.board[i][j] == 5:
+                    house += 1
+        if house > electricity * 3:
+            self.lq -= 10
+        if self.temp >= 1.5:
+            self.lq -= 3
+        if self.p >= 150 * house and self.p >= 350:
+            self.lq -= 8
+        if house <= electricity * 3 and self.temp < 1.5 and self.p < 150 * house:
+            self.lq += 2
+            if self.lq > 100:
+                self.lq = 100
+
+        print('GameYear: %d' % self.gameYear)
+
 
 '''
     Tests whether the player achieves the final goal:

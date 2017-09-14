@@ -95,8 +95,7 @@ def slowly_change(stateObject):
     stateObject.temp = 0.008 * stateObject.gg
     stateObject.gameYear += 1
 
-    print('GameYear: %d' % stateObject.gameYear)
-
+    # Random Wild Fire when Delta T > 1 (1/3 properbility)
     if stateObject.temp >= 1 and randint(1, 3) == 1:
         forest = False
         while not forest:
@@ -109,6 +108,7 @@ def slowly_change(stateObject):
         print('Due to high temperture, forest fire happened at row %d, column %d, and burned down near blocks.' \
               % (i + 1, j + 1))
 
+    # Flood
     if stateObject.temp >= 1.5:
         print('Sea level rising caused shore area being flooded.')
         for i in range(10):
@@ -129,20 +129,21 @@ def slowly_change(stateObject):
             except:
                 break
 
+    # Empty space grow back to forest
     for i in range(10):
         for j in range(10):
-            if (i, j) not in stateObject.emptyDict and stateObject.board[i][j] == 1:
-                stateObject.emptyDict[(i, j)] = 0
-            elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] < 3:
-                stateObject.emptyDict[(i, j)] += 1
-            elif (i, j) in stateObject.emptyDict and stateObject.board[i][j] != 1:
-                del(stateObject.emptyDict[(i, j)])
-            elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] == 3:
-                stateObject.board[i][j] = 0
-                del(stateObject.emptyDict[(i, j)])
-            
+            if stateObject.board[i][j] == 1:
+                if (i, j) not in stateObject.emptyDict and stateObject.board[i][j] == 1:
+                    stateObject.emptyDict[(i, j)] = 0
+                elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] < 3:
+                    stateObject.emptyDict[(i, j)] += 1
+                elif (i, j) in stateObject.emptyDict and stateObject.emptyDict[(i, j)] == 3:
+                    stateObject.board[i][j] = 0
+                    del stateObject.emptyDict[(i, j)]
+                elif (i, j) in stateObject.emptyDict and stateObject.board[i][j] != 1:
+                    del stateObject.emptyDict[(i, j)]
 
-
+    # Count every facilities on the game board for variable change
     for i in range(10):
         stateObject.gg += 15 * stateObject.board[i].count(4)
         stateObject.gg += 10 * stateObject.board[i].count(2)
@@ -150,6 +151,7 @@ def slowly_change(stateObject):
         stateObject.gold += 10 * stateObject.board[i].count(3)
         stateObject.food += 20 * stateObject.board[i].count(2)
 
+    # LQ
     electricity = 0
     house = 0
     for i in range(10):
@@ -168,6 +170,8 @@ def slowly_change(stateObject):
         stateObject.lq += 2
         if stateObject.lq > 100:
             stateObject.lq = 100
+
+    print('GameYear: %d' % stateObject.gameYear)
 
 
 '''
@@ -200,7 +204,7 @@ INITIAL_STATE_DICT = {
                 'selectedAction': '',   # Current action selected by the user
                 'selectedRow': 0,       # Current row selected by the user
                 'playerType': '',
-                'gameYear': 1,
+                'gameYear': 0,
                 'emptyDict': {}
                 }
 
@@ -386,7 +390,7 @@ class Game_State:
                 electricity = False
             if newState.board[i][j] == 1 and newState.gold >= 5 and electricity == True:
                 newState.board[i][j] = 5
-                newState.gold -= 5 
+                newState.gold -= 5
             elif electricity == True:
                 print ("The space is not available or you don't have enough money")
                 apply = False
@@ -403,7 +407,7 @@ class Game_State:
             if newState.board[i][j] == 1 and newState.gold >= 10:
                 newState.board[i][j] = 3
                 newState.gold -= 10
-                newState.gg += 20
+                newState.gg += 15
             else:
                 print ("You can only mine on empty spaces, or you don't have 10 gold.")
                 apply = False

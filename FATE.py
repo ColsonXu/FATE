@@ -69,26 +69,46 @@ def op_blocks(i, j, state):
     return blocks
 
 def slowly_change(stateObject):
+    if stateObject.gg < 0:
+        stateObject.gg = 0
     stateObject.food -= 0.2 * stateObject.p
     stateObject.p = int(1.079 * stateObject.p)
     stateObject.temp = 0.01 * stateObject.gg
     stateObject.gameYear += 1
-    print('GameYear: %d' % stateObject.gameYear)
-    time.sleep(3)
 
-    if stateObject.temp >= 1 and randint(1, 3) == 1:
+    print('GameYear: %d' % stateObject.gameYear)
+
+    if stateObject.temp >= 1.5 and randint(1, 3) == 1:
         forest = False
         while not forest:
             i = randint(0, 9)
             j = randint(0, 9)
             if stateObject.board[i][j] == 0:
+                forest = True
                 for block in op_blocks(i, j, stateObject):
                     stateObject.board[block[0]][block[1]] = 1
         print('Due to high temperture, forest fire happened at row %d, column %d, and burned down near blocks.' \
               % (i + 1, j + 1))
 
-    if stateObject.gg < 0:
-        stateObject.gg = 0
+    if stateObject.temp >= 2.2:
+        print('Sea level rising caused shore area being flooded.')
+        for i in range(10):
+            if (stateObject.board[i].count(7) == 9 and stateObject.board[i][9] == 6) or \
+            (stateObject.board[i].count(7) == 10):
+                nextRow = i - 1
+                break
+        change_list = []
+        while True:
+            index = randint(0, 9)
+            if stateObject.board[nextRow][index] != 7 and len(change_list) < 4:
+                change_list.append(index)
+            if len(change_list) == 4 or len(change_list) == (10 - stateObject.board[nextRow].count(7)):
+                break
+        for i in range(4):
+            try:
+                stateObject.board[nextRow][change_list.pop()] = 7
+            except:
+                break
 
     for i in range(10):
         stateObject.gg += 15 * stateObject.board[i].count(4)
@@ -360,6 +380,7 @@ class Game_State:
         if apply:#when temp rise to 1 and more, there's 1/3 chance of a forest fire that also burn down near blocks
             slowly_change(newState)
 
+        time.sleep(2.5)
         return newState
 
 '''

@@ -534,7 +534,7 @@ def goal_test(state):
         your people, but the environment is still getting worse and worse.')
         return True
     if state.gameYear < 45:
-        if state.lq <= 60:
+        if state.lq <= 40:
             print('Your people are living in hell! They rebelled!')
             return True
         if state.food <= 0:

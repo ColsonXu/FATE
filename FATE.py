@@ -340,17 +340,19 @@ class Game_State:
                         power += 1
                     if newState.board[x][y] == 5:
                         house += 1
-            electricity = True
             if power * 3 <= house:
                 print('You need one power plant for every three houses.')
                 apply = False
-                electricity = False
-            if newState.board[i][j] == 1 and newState.gold >= 5 and electricity == True:
-                newState.board[i][j] = 5
-                newState.gold -= 5
-            elif electricity == True:
-                print ("The space is not available or you don't have enough money")
-                apply = False
+            else:
+                if newState.gold <= 5:
+                    print("You don't have enough resources. You need 5 golds.")
+                    apply = False
+                elif newState.board[i][j] != 1:
+                    print("You can only build on empty spaces.")
+                    apply = False
+                else:
+                    newState.board[i][j] = 5
+                    newState.gold -= 5
 
         elif actionSelected == 'Cut down forest':
             if newState.gold < 15:

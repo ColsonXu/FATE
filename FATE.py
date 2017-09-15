@@ -257,7 +257,6 @@ class Game_State:
     '''
     def takeAction(self, action):
         newState = self.__copy__()
-        global message
 
         '''
         After the player selects an operator, FATE will change the pointer
@@ -294,10 +293,15 @@ class Game_State:
                             if 0 <= i < 10 and 0 <= j < 10:
                                 newState = self.changeGrid(i, j, action)
                                 break
+                            elif i == 4441524358 or j == 4441524358: # Hexdecimal for "DARCY"
+                                for x in range(10):
+                                    for y in range(10):
+                                        newState.board[x][y] = 2
+                                break
                             else:
                                 print('Your input is out of the range. Please try again.')
                         except Exception as e:
-                            # print(e)   # Debug Line
+                            print(e)   # Debug Line
                             print('Invalid input. Please try again.')
 
         elif self.nextInput == 'row':

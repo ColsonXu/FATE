@@ -370,7 +370,7 @@ class Game_State:
             if newState.gold < 10:
                 print("You don't have enough resources. You need 10 golds.")
                 apply = False
-            elif newState.board[i][j] == 1:
+            elif newState.board[i][j] != 1:
                 print("You can only mine on empty spaces.")
                 apply = False
             else:
@@ -393,7 +393,7 @@ class Game_State:
                 if newState.wood < 5 or newState.gold < 15:
                     print("You don't have enough resources. You need 5 woods and 15 golds.")
                     apply = False
-                elif newState.board[i][j] == 1:
+                elif newState.board[i][j] != 1:
                     print("You can only build on empty spaces.")
                     apply = False
                 else:

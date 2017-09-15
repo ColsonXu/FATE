@@ -237,9 +237,8 @@ class Game_State:
                         ['Burn down forest', 'Cut down forest']:
                             return True
                         elif blockState == 1 and actionSelected in \
-                        ['Build cattle farm', 'Mine coal', 'Build house']:
-                            return True
-                        elif blockState == 3 and actionSelected == 'Build power plant':
+                        ['Build cattle farm', 'Mine coal', 'Build house', \
+                        'Build power plant']:
                             return True
             return False
 

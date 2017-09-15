@@ -5,6 +5,8 @@ Colson Xu, Leo Liao, Yujia Lin, Yuxuan Lu
 </div>
 
 ---
+<br>
+<br>
 
 ### Tentative Name
 Our decision on the name of this game is **"FATE"**, as we want to give our target audience a message that the outcome of the game will be the ___fate___ of out world if we build our society the way the player did in the game.

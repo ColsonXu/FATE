@@ -308,33 +308,27 @@ class Game_State:
 
         # Changes state of the block where the player chooses.
         if actionSelected == 'Build cattle farm':
-            if newState.wood >= 5 and newState.gold >= 5 and newState.board[i][j] == 1:
+            if newState.wood < 5 or newState.gold < 5:
+                print("You don't have enough resources. You need 5 woods and 5 golds.")
+                apply = False
+            elif newState.board[i][j] != 1:
+                print("The selected square is not empty.")
+                apply = False
+            else:
                 newState.board[i][j] = 2
                 newState.wood -= 5
                 newState.gold -= 5
                 newState.food += 100
-            else:
-                print ("You don't have 5 wood and 5 gold or the selected square is not empty")
-                apply = False
 
         elif actionSelected == 'Burn down forest':
-            # if you burn the glacial, all board turns to water. just for fun
             if newState.board[i][j] == 0:
                 for block in self.getBurntArea(i, j):
-                    if not (self.board[block[0]][block[1]] == 6 or \
-                            self.board[block[0]][block[1]] == 7):
-                        newState.board[block[0]][block[1]] = 1
+                    newState.board[block[0]][block[1]] = 1
                 for i in range(len(self.getBurntArea(i, j))):
                     newState.gg += 20
             else:
-                if i == 9 and j == 9:
-                    for x in range(10):
-                        for y in range(10):
-                            newState.board[x][y] = 7
-                    newState.lq = 0
-                else:
-                    print('You can only burn down forest')
-                    apply = False
+                print('You can only burn down forest.')
+                apply = False
 
 
         elif actionSelected == 'Build house':
@@ -348,7 +342,7 @@ class Game_State:
                         house += 1
             electricity = True
             if power * 3 <= house:
-                print('You need one power plant for every three house')
+                print('You need one power plant for every three houses.')
                 apply = False
                 electricity = False
             if newState.board[i][j] == 1 and newState.gold >= 5 and electricity == True:
@@ -357,23 +351,30 @@ class Game_State:
             elif electricity == True:
                 print ("The space is not available or you don't have enough money")
                 apply = False
+
         elif actionSelected == 'Cut down forest':
-            if newState.board[i][j] == 0 and newState.gold >= 15:
+            if newState.gold < 15:
+                print("You don't have enough resources. You need 15 golds.")
+                apply = False
+            elif newState.board[i][j] != 0:
+                print('You can only cut down forest.')
+                apply = False
+            else:
                 newState.board[i][j] = 1
                 newState.wood += 5
                 newState.gold -= 15
-            else:
-                print ("You can only cut down forest. At least 15 gold is needed")
-                apply = False
 
         elif actionSelected == 'Mine coal':
-            if newState.board[i][j] == 1 and newState.gold >= 10:
+            if newState.gold < 10:
+                print("You don't have enough resources. You need 10 golds.")
+                apply = False
+            elif newState.board[i][j] == 1:
+                print("You can only mine on empty spaces.")
+                apply = False
+            else:
                 newState.board[i][j] = 3
                 newState.gold -= 10
                 newState.gg += 15
-            else:
-                print ("You can only mine on empty spaces, or you don't have 10 gold.")
-                apply = False
 
         elif actionSelected == 'Build power plant':
             mining = 0
@@ -384,19 +385,21 @@ class Game_State:
                         mining += 1
                     if newState.board[x][y] == 4:
                         powerplant += 1
-            mine = True
             if powerplant >= mining:
-                print('One mine required for each powerplant')
-                mine = False
-            if newState.wood >= 5 and newState.gold >= 15 and newState.board[i][j] == 1 and mine == True:
-                newState.board[i][j] = 4
-                newState.wood -= 5
-                newState.gold -= 15
-            elif mine == True:
-                print ("You need 15 gold and 5 wood to build a powerplant. And you can only build on empty space.")
-                apply = False
+                print('One mine is required for each power plant.')
+            else:
+                if newState.wood < 5 or newState.gold < 15:
+                    print("You don't have enough resources. You need 5 woods and 15 golds.")
+                    apply = False
+                elif newState.board[i][j] == 1:
+                    print("You can only build on empty spaces.")
+                    apply = False
+                else:
+                    newState.board[i][j] = 4
+                    newState.wood -= 5
+                    newState.gold -= 15
 
-        if apply:#when temp rise to 1 and more, there's 1/3 chance of a forest fire that also burn down near blocks
+        if apply: # when temp rise to 1 and more, there's 1/3 chance of a forest fire that also burn down near blocks
             newState.slowly_change()
 
         return newState

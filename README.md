@@ -1,40 +1,10 @@
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-
-
-# Project 3 Milestone B Report
+# Project 3 Report
 ## **FATE** - Formulating Historical Society Growth for a Better World
 <div style="text-align: right">
 Colson Xu, Leo Liao, Yujia Lin, Yuxuan Lu
 </div>
 
 ---
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
 
 ### Tentative Name
 Our decision on the name of this game is **"FATE"**, as we want to give our target audience a message that the outcome of the game will be the ___fate___ of out world if we build our society the way the player did in the game.

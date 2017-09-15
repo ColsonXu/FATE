@@ -537,8 +537,9 @@ def goal_test(state):
     # Show instruction at the beginning of the game
     if state.gameYear == 0 and state.nextInput == 'action':
         print('Can you survive 45 turns?\n')
+        return False
     if state.gameYear == 45:
-        print('You achieved the impossible! You managed to survive 60 years with \
+        print('You achieved the impossible! You managed to survive 45 years with \
         your people, but the environment is still getting worse and worse.')
         return True
     if state.gameYear < 45:

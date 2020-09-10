@@ -5,6 +5,7 @@ Colson Xu, Leo Liao, Yujia Lin, Yuxuan Lu
 </div>
 
 ---
+To run the game, simply run `python Tk_SOLUZION_Client.py`
 <br>
 <br>
 
